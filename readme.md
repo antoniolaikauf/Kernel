@@ -17,8 +17,18 @@ All this process is done in the background, the kernel is not the ISA because IS
 
 # Type of kernel 
 there are four categories of kernel 
-- **kernel monolitici**
+- **kernel monolitici** 
+
+  Is a single enity that manages all the function of the operating system, such as memory management, process management and comunication between the various hardware components. This kind of kernel is very fast 
 - **microkernel**
+
+  The microkernel is designed to be as small as possible, delegating many of its functions to external modules operating is 'userpace'. This approach reduces the compleity of the kernel and increases stability, however comunication between the various modules may be slower.  
 - **kernel ibrido**
-- **esokernel**
+
+  Combines elements of monolithic kernels and microkernels.
+- **esokernel** 
+
+  focuses on etremely low resources managements
 - **nanokernel**
+  
+  give direct access to the hardware 
