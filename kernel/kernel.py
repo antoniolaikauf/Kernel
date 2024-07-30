@@ -6,7 +6,10 @@ class process:
         self.memory_required=memory_required
 
     def __str__(self):
-        return str(self.name)
+        return f"Process(name={self.name}, memory_required={self.memory_required})"
+    
+    def __repr__(self) -> str:
+        return self.__str__()
         
     def run(self):
         print(f'{self.name} terminated')      
@@ -31,16 +34,12 @@ class scheduler: #gestione processi
         else:     
             for x in  range(self.maxSize, self.n_process + 1): # methods n queue
                 y=process(x,200)
-                # print(y)
                 self.Q.append(y)
                 self.Q.pop(0)
-                # print(self.Q)
             return self.Q
     
     def __str__(self):
        return str(self.Q)
-       for  x in self.Q:
-           print(x)
      
 # class Kernel: #kernel
 #     def __init__(self, sheduler):
