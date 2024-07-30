@@ -21,19 +21,25 @@ class scheduler: #gestione processi
         self.element=element
         self.maxSize=maxSize
         self.Q=[]
-    
+
     def queue(self):
+        self.Q=self.element[:self.maxSize]
+        return ' initialize_queue '
+    
+    def methods_queue(self):
         if self.maxSize <= 0: return 'infinite queue'
-        # if self.element <= self.maxSize :
-        #     if len(self.Q) < self.maxSize:
-        #         self.Q.append(self.element)
-        #     else:
-        #         self.Q.pop(0)
-        #         self.Q.append(self.element)
-        # return self.Q
+        if len(self.element) < self.maxSize: # fewer elements compared to maxSize
+            return self.Q
+        else:     
+            for x in self.element[len(self.Q):]:
+                self.Q.append(x)
+                self.Q.pop(0)
+            return self.Q
         
 
-
+S=scheduler([1,2])
+print(S.queue())
+print(S.methods_queue())
         
 # Q = []
 
