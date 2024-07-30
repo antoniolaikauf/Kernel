@@ -9,12 +9,16 @@ class Kernel: #kernel
 class Memory: #allocazione memoria
     def __init__(self,memory):
         self.memory= memory
+        self.used_memory=0
 
-    def allocate(self):
-        pass
+    def allocate(self,space):
+        self.used_memory += space
+        if self.used_memory <= self.memory: print(f'memoria allocata {space} memoria disponibile {  self.memory - (self.used_memory + space) }')
+        else: print(f'memoria allocata {self.used_memory} supera {space}')
     
-    def free(self):
-        pass
+    def free(self, space):
+        self.used_memory -= space
+        print(f'memoria liberata di {space}')
 
 class scheduler: #gestione processi
     def __init__(self,element, maxSize=5):
@@ -36,7 +40,7 @@ class scheduler: #gestione processi
                 self.Q.pop(0)
             return self.Q
         
-
+M=Memory(1024)
 S=scheduler([1,2])
 print(S.queue())
 print(S.methods_queue())
