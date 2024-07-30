@@ -1,3 +1,17 @@
+'''
+Gestione dei Processi:
+Un vero scheduler di kernel deve gestire varie operazioni sui processi, come creazione, terminazione, sospensione, e ripresa.
+
+Priorità e Preemption:
+I moderni sistemi operativi spesso usano la priorità per determinare l'ordine di esecuzione dei processi e supportano la preemption, dove i processi possono essere interrotti per passare ad altri con priorità più alta.
+
+Concorrenza e Sicurezza:
+In un sistema operativo reale, la gestione dei processi deve essere thread-safe, in quanto più thread o processi potrebbero tentare di accedere agli stessi dati.
+
+Tempo di Esecuzione e Scheduling Algorithms:
+Algoritmi di scheduling più avanzati (Round-Robin, Shortest Job Next, ecc.) considerano vari parametri come il tempo di esecuzione, il tempo di arrivo, e la durata per determinare l'ordine dei processi.
+'''
+
 import time 
 
 class process:
@@ -69,15 +83,7 @@ S=scheduler(20)
 S.queue()
 S.methods_queue()
 print(S)
-# K=Kernel(S)
-# K.run()
-# print(S.queue())
-# print(S.methods_queue())
 
-# for x in range(20):
-#     S=scheduler(x)
-#     S.element.run()
-    # print(S.queue())
 
 # Q = []
 
