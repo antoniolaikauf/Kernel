@@ -17,17 +17,18 @@ class Memory: #allocazione memoria
 class scheduler: #gestione processi
     pass
 
+Q = []
 
-Q=[]
-def queue(x,maxSize=5): #first in first out
-    if maxSize <=0: return ' queue infinite'
-    if len(Q) < maxSize: Q.append(x)
-    else:
-        Q.insert(0,x)
-        Q.pop(-1)
+def queue(x,element, maxSize=5): # queue
+    if maxSize <=0: return 'infinite queue'
+    if x <= element:  
+        if len(Q) < maxSize:
+            Q.append(x)
+        else:
+            Q.pop(0)  
+            Q.append(x)
+        return queue(x + 1, element, maxSize)
     return Q
 
-for x in range(10):
-    print(queue(x,5))
-    # time.sleep(1)
 
+print(queue(0, 20, 5))
