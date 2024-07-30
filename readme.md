@@ -32,3 +32,12 @@ there are four categories of kernel
 - **nanokernel**
   
   give direct access to the hardware 
+
+
+## links
+
+- https://weblab.ing.unimore.it/people/andreoli/didattica/sistemi-operativi/2020-21/19-scheduling-processi-linux/19-scheduling-processi-linux.pdf
+
+- https://en.wikipedia.org/wiki/Round-robin_scheduling
+
+- https://www.geeksforgeeks.org/program-for-round-robin-scheduling-for-the-same-arrival-time/
