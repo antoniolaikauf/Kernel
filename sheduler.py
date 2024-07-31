@@ -1,5 +1,6 @@
 import time 
 from termcolor import colored, cprint 
+from kernel import Memory
 '''
 Burst_Time would be the time that the proccess need to be executes call BURST TIME
 '''
@@ -49,18 +50,16 @@ class scheduler: # gestione processi
     def __str__(self):
        return str(self.Q)
 
-P=[process('process1',200,10),
-   process('process2',200,100),
-   process('process3',200,20),
-   process('process4',200,33),
-   process('process5',200,56)]
+P=[process('process1',256,20),
+   process('process2',256,20),
+   process('process3',256,20),
+   process('process4',256,33),
+   process('process5',256,56)]
 
+M=Memory(1024) # simulazione di 1 KB RAM 
 for x in P:
     x.run(10)
+    M.allocate(x.memory_required)
 
-
-# S=scheduler(P,10)
-# S.queue()
-# S.methods_queue()
-# print(S)
+# Memory management in Python involves a private heap containing all Python objects and data structures.
 
