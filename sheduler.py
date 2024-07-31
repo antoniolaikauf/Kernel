@@ -38,14 +38,14 @@ class scheduler: # gestione processi
     
     def bulbe_sort(self):
         L=len(self.n_process) - 1
-        for y in range(L):
+        for y in range(L): #time O(n**2)
             for j in range((L) - y):
                 if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
                     self.n_process[j]['Burst_Time'] , self.n_process[j + 1]['Burst_Time'] = self.n_process[j + 1]['Burst_Time'], self.n_process[j]['Burst_Time'] 
         return self.n_process
     
     def queue(self):
-        self.Q=self.n_process[:self.maxSize] #start queue
+        self.Q=self.n_process[:self.maxSize] #preparation queue follow Algorithms ORR or SORR (the best)
         return self.Q
 
     # TODO sistemare tutto questo processo deve fare il ciclo ad ogni elemento e togliere gli elementi che hanno finito con il tempo 

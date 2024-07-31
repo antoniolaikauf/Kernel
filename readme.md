@@ -12,6 +12,11 @@ The kernel has always the same structures and consist of severals layers
 4. layer: **management of devices**.
 5. layer: **file system** here, processes are assigned to their respective areas on the main memory or hard disk.
 
+## Scheduler
+
+A true scheduler must manage various operations on processes, such as **creation**, **termination**, **suspension**, and **resumption**.
+Modern operating systems often use priority to determine the order in which processes are executed, **processes can be interrupted to move on to others with a higher priority.**
+
 All this process is done in the background, the kernel is not the ISA because ISA are the istruction that the CPU can do instead the kernel tell the cpu what do and this process bring a better organization and performance  
 
 

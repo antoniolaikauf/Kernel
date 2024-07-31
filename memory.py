@@ -1,22 +1,8 @@
 
 from termcolor import colored, cprint 
 '''
-Gestione dei Processi:
-Un vero scheduler di kernel deve gestire varie operazioni sui processi, come creazione, terminazione, sospensione, e ripresa.
-
-La priorità varia da -20 (priorità più alta) a +19 (priorità più bassa). Il valore di default è 10
-Un processo in attesa da più tempo viene favorito rispetto ad un processo che attende da meno tempo. A parità di attesa, un processo a priorità più alta viene favorito rispetto ad un processo a priorità più bassa.
-A tal scopo, ad ogni processo è associato un contatore, inizializzato al valore della priorità statica.
-
-
-Priorità e Preemption:
-I moderni sistemi operativi spesso usano la priorità per determinare l'ordine di esecuzione dei processi e supportano la preemption, dove i processi possono essere interrotti per passare ad altri con priorità più alta.
-
 Concorrenza e Sicurezza:
 In un sistema operativo reale, la gestione dei processi deve essere thread-safe, in quanto più thread o processi potrebbero tentare di accedere agli stessi dati.
-
-Tempo di Esecuzione e Scheduling Algorithms:
-Algoritmi di scheduling più avanzati (Round-Robin, Shortest Job Next, ecc.) considerano vari parametri come il tempo di esecuzione, il tempo di arrivo, e la durata per determinare l'ordine dei processi.
 '''
 
 import time 
