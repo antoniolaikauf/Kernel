@@ -1,15 +1,3 @@
-a=[4,2,7,5,1]
-
-def bulbe_sort(x):
-    L=len(x) - 1
-    for y in range(L):
-        for j in range((L) - y):
-            print(j)
-            if x[j] > x[j + 1]: 
-                x[j] , x[j + 1] = x[j + 1], x[j] 
-    return x
-
-
 import time 
 from termcolor import colored, cprint 
 from memory import Memory
@@ -23,8 +11,8 @@ class process:
         self.Burst_Time=Burst_Time
         self.remaining_time=Burst_Time
 
-    def __str__(self):
-        return f"name={self.name}, remaining_time={self.remaining_time})"
+    # def __str__(self):
+    #     return {'name':self.name}
     
     # def __repr__(self):
     #    return  process.__str__(self)
@@ -52,8 +40,8 @@ class scheduler: # gestione processi
         L=len(self.n_process) - 1
         for y in range(L):
             for j in range((L) - y):
-                if self.n_process[j] > self.n_process[j + 1]: 
-                    self.n_process[j] , self.n_process[j + 1] = self.n_process[j + 1], self.n_process[j] 
+                if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
+                    self.n_process[j]['Burst_Time'] , self.n_process[j + 1]['Burst_Time'] = self.n_process[j + 1]['Burst_Time'], self.n_process[j]['Burst_Time'] 
         return self.n_process
     
     def queue(self):
@@ -75,18 +63,18 @@ class scheduler: # gestione processi
     def __str__(self):
        return str(self.Q)
 
-P=[process('process1',256,20),
-   process('process2',256,20),
-   process('process3',256,20),
-   process('process4',256,33),]
+P=[process('process1',256,50).__dict__,
+   process('process2',256,90).__dict__,
+   process('process3',256,10).__dict__,
+   process('process4',256,33).__dict__,]
 
-print(P)
 # M=Memory(1024) # simulazione di 1 KB RAM 
 # for x in P:
 #     x.run(10)
 #     M.allocate(x.memory_required)
 
-# S=scheduler(P)
-# print(S.queue())
+S=scheduler(P,2)
+S.bulbe_sort()
+print(S.queue())
 # Memory management in Python involves a private heap containing all Python objects and data structures.
 
