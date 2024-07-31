@@ -1,24 +1,27 @@
 import time 
-
+'''
+time would be the time that the proccess need to be executes call BURST TIME
+'''
 class process:
-    def __init__(self, name, memory_required, time):
+    def __init__(self, name, memory_required, Burst_Time): 
         self.name=name
         self.memory_required=memory_required
-        self.time=time
+        self.Burst_Time=Burst_Time
 
     def __str__(self):
-        return f"Process(name={self.name}, memory_required={self.memory_required}, time={self.time})"
+        return f"Process(name={self.name}, memory_required={self.memory_required}, time={self.Burst_Time})"
     
     def __repr__(self):
         return self.__str__()
         
     def run(self):
-        print(f'{self.name} terminated')   
+        print(f'{self.name}')   
 
 class scheduler: # gestione processi
-    def __init__(self, n_process, maxSize=2):
+    def __init__(self, n_process, Quantum=5, maxSize=2):
         self.n_process= n_process
         self.maxSize=maxSize
+        self.Quantum=Quantum
         self.Q=[]
         
     def queue(self):
@@ -45,7 +48,7 @@ P=[process('process1',200,10),
    process('process5',200,56)]
 
 
-S=scheduler(P)
+S=scheduler(P,10)
 S.queue()
 S.methods_queue()
 print(S)
