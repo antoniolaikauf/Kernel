@@ -1,21 +1,26 @@
 import time 
+from termcolor import colored, cprint 
+
 '''
 time would be the time that the proccess need to be executes call BURST TIME
 '''
 class process:
-    def __init__(self, name, memory_required, Burst_Time): 
+    def __init__(self, name, memory_required, Burst_Time): # Burst_Time is in milliseconds
         self.name=name
         self.memory_required=memory_required
         self.Burst_Time=Burst_Time
+        self.remaining_time=Burst_Time
 
     def __str__(self):
-        return f"Process(name={self.name}, memory_required={self.memory_required}, time={self.Burst_Time})"
-    
-    def __repr__(self):
-        return self.__str__()
+        return f"Process(pid={self.pid}, name={self.name}, remaining_time={self.remaining_time})"
         
-    def run(self):
-        print(f'{self.name}')   
+    def run(self,Quantum): # Quantum is in milliseconds
+        T=max(self.remaining_time,Quantum)
+        T-=Quantum
+        time.sleep(T * 0.1) # milliseconds
+        if T == 0 : cprint(f'finished execution: {self.name}','red')
+        else : cprint(f'not finished: {self.name}, time left:{T}' ,'blue')
+        return T
 
 class scheduler: # gestione processi
     def __init__(self, n_process, Quantum=5, maxSize=2):
@@ -47,9 +52,12 @@ P=[process('process1',200,10),
    process('process4',200,33),
    process('process5',200,56)]
 
+for x in P:
+    x.run(10)
 
-S=scheduler(P,10)
-S.queue()
-S.methods_queue()
-print(S)
+
+# S=scheduler(P,10)
+# S.queue()
+# S.methods_queue()
+# print(S)
 
