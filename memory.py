@@ -1,5 +1,6 @@
 
 from termcolor import colored, cprint 
+
 '''
 Concorrenza e Sicurezza:
 In un sistema operativo reale, la gestione dei processi deve essere thread-safe, in quanto più thread o processi potrebbero tentare di accedere agli stessi dati.
