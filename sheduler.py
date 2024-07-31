@@ -1,6 +1,18 @@
+a=[4,2,7,5,1]
+
+def bulbe_sort(x):
+    L=len(x) - 1
+    for y in range(L):
+        for j in range((L) - y):
+            print(j)
+            if x[j] > x[j + 1]: 
+                x[j] , x[j + 1] = x[j + 1], x[j] 
+    return x
+
+
 import time 
 from termcolor import colored, cprint 
-from kernel import Memory
+from memory import Memory
 '''
 Burst_Time would be the time that the proccess need to be executes call BURST TIME
 '''
@@ -13,6 +25,9 @@ class process:
 
     def __str__(self):
         return f"name={self.name}, remaining_time={self.remaining_time})"
+    
+    # def __repr__(self):
+    #    return  process.__str__(self)
         
     def run(self,Quantum): # Quantum is in milliseconds
         T=max(self.remaining_time,Quantum)
@@ -24,6 +39,7 @@ class process:
 
 '''
  Quantum is the time the the scheduler give to all process 
+ Shortest Job First chi ha il Burst_Time piu basso ha una priorità più alta 
 '''
 class scheduler: # gestione processi
     def __init__(self, n_process, Quantum=5, maxSize=2):
@@ -31,13 +47,22 @@ class scheduler: # gestione processi
         self.maxSize=maxSize
         self.Quantum=Quantum
         self.Q=[]
-        
+    
+    def bulbe_sort(self):
+        L=len(self.n_process) - 1
+        for y in range(L):
+            for j in range((L) - y):
+                if self.n_process[j] > self.n_process[j + 1]: 
+                    self.n_process[j] , self.n_process[j + 1] = self.n_process[j + 1], self.n_process[j] 
+        return self.n_process
+    
     def queue(self):
         self.Q=self.n_process[:self.maxSize] #start queue
         return self.Q
-    
+
     # TODO sistemare tutto questo processo deve fare il ciclo ad ogni elemento e togliere gli elementi che hanno finito con il tempo 
     def methods_queue(self):
+        E=[]
         if self.maxSize <= 0: return 'infinite queue'
         if len(self.n_process) < self.maxSize: # fewer elements compared to maxSize
             return self.Q
@@ -53,13 +78,15 @@ class scheduler: # gestione processi
 P=[process('process1',256,20),
    process('process2',256,20),
    process('process3',256,20),
-   process('process4',256,33),
-   process('process5',256,56)]
+   process('process4',256,33),]
 
-M=Memory(1024) # simulazione di 1 KB RAM 
-for x in P:
-    x.run(10)
-    M.allocate(x.memory_required)
+print(P)
+# M=Memory(1024) # simulazione di 1 KB RAM 
+# for x in P:
+#     x.run(10)
+#     M.allocate(x.memory_required)
 
+# S=scheduler(P)
+# print(S.queue())
 # Memory management in Python involves a private heap containing all Python objects and data structures.
 
