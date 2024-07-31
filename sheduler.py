@@ -1,8 +1,7 @@
 import time 
 from termcolor import colored, cprint 
-
 '''
-time would be the time that the proccess need to be executes call BURST TIME
+Burst_Time would be the time that the proccess need to be executes call BURST TIME
 '''
 class process:
     def __init__(self, name, memory_required, Burst_Time): # Burst_Time is in milliseconds
@@ -12,16 +11,19 @@ class process:
         self.remaining_time=Burst_Time
 
     def __str__(self):
-        return f"Process(pid={self.pid}, name={self.name}, remaining_time={self.remaining_time})"
+        return f"name={self.name}, remaining_time={self.remaining_time})"
         
     def run(self,Quantum): # Quantum is in milliseconds
         T=max(self.remaining_time,Quantum)
         T-=Quantum
         time.sleep(T * 0.1) # milliseconds
         if T == 0 : cprint(f'finished execution: {self.name}','red')
-        else : cprint(f'not finished: {self.name}, time left:{T}' ,'blue')
+        else : cprint(f'not finished: {self.name}, time left:{T * 0.1:.2f}s' ,'blue')
         return T
 
+'''
+ Quantum is the time the the scheduler give to all process 
+'''
 class scheduler: # gestione processi
     def __init__(self, n_process, Quantum=5, maxSize=2):
         self.n_process= n_process
@@ -33,6 +35,7 @@ class scheduler: # gestione processi
         self.Q=self.n_process[:self.maxSize] #start queue
         return self.Q
     
+    # TODO sistemare tutto questo processo deve fare il ciclo ad ogni elemento e togliere gli elementi che hanno finito con il tempo 
     def methods_queue(self):
         if self.maxSize <= 0: return 'infinite queue'
         if len(self.n_process) < self.maxSize: # fewer elements compared to maxSize

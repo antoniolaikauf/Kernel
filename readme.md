@@ -41,3 +41,5 @@ there are four categories of kernel
 - https://en.wikipedia.org/wiki/Round-robin_scheduling
 
 - https://www.geeksforgeeks.org/program-for-round-robin-scheduling-for-the-same-arrival-time/
+
+- https://medium.com/@francescofranco_39234/round-robin-scheduling-algorithm-8d65128d96db
