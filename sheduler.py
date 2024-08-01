@@ -58,23 +58,25 @@ class scheduler: # gestione processi
     def queue(self):
         if self.maxSize <= 0: return 'infinite queue'
         elif len(self.n_process) < self.maxSize: # fewer elements compared to maxSize
-            return self.n_process
-        else: 
-            self.n_process=self.n_process[:self.maxSize]
-            return self.n_process  #preparation queue follow Algorithms ORR or SORR (the best)
+             self.n_process=self.n_process[:self.maxSize]
+        return self.n_process  #preparation queue follow Algorithms ORR or SORR (the best)
 
 
     # TODO sistemare tutto questo processo deve fare il ciclo ad ogni elemento e togliere gli elementi che hanno finito con il tempo 
     def round_robin(self):
         complete_process=[]
+        self.n_process=self.n_process[::-1]
+        
         while self.n_process != []: # methods n queue
-            for x in self.n_process:
-                x['remaining_time']-= self.Quantum
-                if  x['remaining_time'] <= 0 :
-                    x['remaining_time']= 0 
-                    self.n_process.remove(x)
-                    complete_process.append(x)
-        return (complete_process, self.n_process)
+            self.n_process[-1]['remaining_time'] -= self.Quantum
+            if self.n_process[-1]['remaining_time'] <= 0:
+               self.n_process[-1]['remaining_time']=0
+               complete_process.append(self.n_process[-1])
+               self.n_process.remove(self.n_process[-1])
+            else:
+                self.n_process=[self.n_process[-1]] + self.n_process[:-1]
+
+        return (complete_process)
     
     def __str__(self):
        return str(self.Q)
