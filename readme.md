@@ -29,17 +29,15 @@ the round robin is a scheduler that is based on **FIFO (first in first out)** an
 Introduzione della Priorità
 
 
-**scheduler with priority**
+**scheduler with priority** es. **Shortest Job First (SJF)**
 ![](img/QRlKw.gif)
+
 all process in order \
 |p1|p1|p2|p3|p4|p5|p1|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p3|\
 0  4  8 12 16  20 24 28 32 36 40 44 48 52 56 60 64 68 69 72 75 79 80
 
-
-Nei sistemi di scheduling con priorità, i processi non vengono semplicemente gestiti in ordine di arrivo. Ecco come funziona:
-Coda di Priorità: Invece di una semplice coda FIFO, i processi possono essere inseriti in una coda di priorità. In questa coda, i processi con priorità più alta vengono eseguiti prima di quelli con priorità più bassa, indipendentemente dall'ordine di arrivo.
-Preemption: Se un processo di alta priorità arriva mentre un processo di bassa priorità è in esecuzione, il sistema può interrompere (preempt) il processo in esecuzione e dare la precedenza a quello di alta priorità.
-Sistemi Misti: Alcuni sistemi utilizzano una combinazione di FIFO e priorità. Ad esempio, possono utilizzare FIFO per i processi con la stessa priorità, mentre i processi con priorità diverse vengono gestiti in base alla loro urgenza.
+Instead of a simple FIFO queue, processes can be placed in a priority queue. In this queue, processes with a higher priority are executed before those with a lower priority, regardless of their order of arrival.
+If a high-priority process arrives while a low-priority process is running, the system can interrupt (preempt) the running process and give precedence to the high-priority process.
 
 
 # Type of kernel 
