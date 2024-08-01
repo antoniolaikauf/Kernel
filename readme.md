@@ -21,13 +21,25 @@ All this process is done in the background, the kernel is not the ISA because IS
 
 
 **scheduler round robin**
-![](img/QRlKw.gif)
+![](img/R.jpg)
 
+after the arrival time is pass the process is put inside the ready queue, that is why there are two time p1,p1 at the start because the process2 is put into the queue after 5s 
+
+the round robin is a scheduler that is based on **FIFO (first in first out)** and ensures that each process is executed fairly t does not take into account the specific needs of processes, such as their urgency or importance.
+Introduzione della Priorità
+
+
+**scheduler with priority**
+![](img/QRlKw.gif)
 all process in order \
 |p1|p1|p2|p3|p4|p5|p1|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p3|\
 0  4  8 12 16  20 24 28 32 36 40 44 48 52 56 60 64 68 69 72 75 79 80
 
-after the arrival time is pass the process is put inside the ready queue, that is why there are two time p1,p1 at the start because the process2 is put into the queue after 5s 
+
+Nei sistemi di scheduling con priorità, i processi non vengono semplicemente gestiti in ordine di arrivo. Ecco come funziona:
+Coda di Priorità: Invece di una semplice coda FIFO, i processi possono essere inseriti in una coda di priorità. In questa coda, i processi con priorità più alta vengono eseguiti prima di quelli con priorità più bassa, indipendentemente dall'ordine di arrivo.
+Preemption: Se un processo di alta priorità arriva mentre un processo di bassa priorità è in esecuzione, il sistema può interrompere (preempt) il processo in esecuzione e dare la precedenza a quello di alta priorità.
+Sistemi Misti: Alcuni sistemi utilizzano una combinazione di FIFO e priorità. Ad esempio, possono utilizzare FIFO per i processi con la stessa priorità, mentre i processi con priorità diverse vengono gestiti in base alla loro urgenza.
 
 
 # Type of kernel 
