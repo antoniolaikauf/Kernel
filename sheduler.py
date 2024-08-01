@@ -1,4 +1,8 @@
 '''
+|p1|p1|p2|p3|p4|p5|p1|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p3|
+0  4  8 12 16  20 24 28 32 36 40 44 48 52 56 60 64 68 69 72 75 79 80
+
+
 In SJF, the CPU is allocated to the 
 process with smallest burst time. When the CPU becomes available, it is assigned to the process 
 that has the smallest next CPU burst tipo di priorità
@@ -14,11 +18,12 @@ Burst_Time would be the time that the proccess need to be executes call BURST TI
 
 # arrival time 
 class process:
-    def __init__(self, name, memory_required, Burst_Time): # Burst_Time is in milliseconds
+    def __init__(self, name, memory_required, Burst_Time,arrival_time): # Burst_Time is in milliseconds
         self.name=name
         self.memory_required=memory_required
         self.Burst_Time=Burst_Time
         self.remaining_time=Burst_Time
+        self.arrival_time=arrival_time
         self.waiting_time=0
 
     # def __str__(self):
@@ -43,7 +48,7 @@ class scheduler: # gestione processi
     def __init__(self, n_process, Quantum=5, maxSize=2):
         self.n_process= n_process
         self.maxSize=maxSize
-        self.Quantum=Quantum * 10 # s instead ms
+        self.Quantum=Quantum 
         self.Q=[]
     
     def bulbe_sort(self):
@@ -56,44 +61,49 @@ class scheduler: # gestione processi
         # return self.n_process
     
     def queue(self):
+        queue=[]
         if self.maxSize <= 0: return 'infinite queue'
-        elif len(self.n_process) < self.maxSize: # fewer elements compared to maxSize
+        if len(self.n_process) > self.maxSize: # fewer elements compared to maxSize
              self.n_process=self.n_process[:self.maxSize]
-        return self.n_process  #preparation queue follow Algorithms ORR or SORR (the best)
+        for i in range(len(self.n_process)):
+            queue.append(self.n_process[i])
+            time.sleep(self.n_process[i]['arrival_time'])
+        print(queue)
+        return queue  #preparation queue follow Algorithms ORR or SORR (the best)
 
-
-    # TODO sistemare tutto questo processo deve fare il ciclo ad ogni elemento e togliere gli elementi che hanno finito con il tempo 
     def round_robin(self):
         complete_process=[]
-        self.n_process=self.n_process[::-1]
         
         while self.n_process != []: # methods n queue
-            self.n_process[-1]['remaining_time'] -= self.Quantum
-            if self.n_process[-1]['remaining_time'] <= 0:
-               self.n_process[-1]['remaining_time']=0
-               complete_process.append(self.n_process[-1])
-               self.n_process.remove(self.n_process[-1])
+            self.n_process[0]['remaining_time'] -= self.Quantum
+            if self.n_process[0]['remaining_time'] <= 0: #rimozione processo dalla ueue
+               self.n_process[0]['remaining_time']=0
+               complete_process.append(self.n_process[0])
+               self.n_process.pop(0)
             else:
-                self.n_process=[self.n_process[-1]] + self.n_process[:-1]
+                self.n_process= self.n_process[1:] + [self.n_process[0]] # elemento aggiunto alla coda della queue
+            time.sleep(self.Quantum) 
+            print(self.n_process)
 
-        return (complete_process)
+        # return complete_process
     
     def __str__(self):
        return str(self.Q)
 
-P=[process('process1',256,50).__dict__,
-   process('process2',256,90).__dict__,
-   process('process3',256,10).__dict__,
-   process('process4',256,33).__dict__,]
+P=[process('process1',256,5,0).__dict__,
+   process('process2',256,9,2).__dict__,
+   process('process3',256,1,2).__dict__,
+   process('process4',256,3,2).__dict__,]
 
 # M=Memory(8192) # simulazione di 1 KB RAM 
 # for x in P:
 #     x.run(10)
 #     M.allocate(x.memory_required)
 
-S=scheduler(P,maxSize=5)
+
+S=scheduler(P,maxSize=7)
 # S.bulbe_sort()
 S.queue()
-print(S.round_robin())
+# print(S.round_robin())
 # Memory management in Python involves a private heap containing all Python objects and data structures.
 
