@@ -20,6 +20,16 @@ Modern operating systems often use priority to determine the order in which proc
 All this process is done in the background, the kernel is not the ISA because ISA are the istruction that the CPU can do instead the kernel tell the cpu what do and this process bring a better organization and performance  
 
 
+**scheduler round robin**
+![](img/QRlKw.gif)
+
+all process in order \
+|p1|p1|p2|p3|p4|p5|p1|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p3|\
+0  4  8 12 16  20 24 28 32 36 40 44 48 52 56 60 64 68 69 72 75 79 80
+
+after the arrival time is pass the process is put inside the ready queue, that is why there are two time p1,p1 at the start because the process2 is put into the queue after 5s 
+
+
 # Type of kernel 
 there are four categories of kernel 
 - **kernel monolitici** 

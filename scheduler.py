@@ -1,7 +1,4 @@
 '''
-|p1|p1|p2|p3|p4|p5|p1|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p4|p5|p2|p3|p3|
-0  4  8 12 16  20 24 28 32 36 40 44 48 52 56 60 64 68 69 72 75 79 80
-
 
 In SJF, the CPU is allocated to the 
 process with smallest burst time. When the CPU becomes available, it is assigned to the process 
@@ -81,6 +78,7 @@ class scheduler: # gestione processi
         complete_process=[]
         
         while self.n_process != []: # methods n queue
+            time.sleep(self.Quantum)
             self.n_process[0]['remaining_time'] -= self.Quantum
             if self.n_process[0]['remaining_time'] <= 0: #rimozione processo dalla ueue
                self.n_process[0]['remaining_time']=0
@@ -90,17 +88,24 @@ class scheduler: # gestione processi
             else:
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [self.n_process[0]] # elemento aggiunto alla coda della queue
-            time.sleep(self.Quantum) 
 
         return complete_process
     
     def __str__(self):
        return str(self.Q)
 
-P=[process('process1',256,5,0).__dict__,
-   process('process2',256,9,2).__dict__,
-   process('process3',256,1,2).__dict__,
-   process('process4',256,3,2).__dict__,]
+P=[process('ps1',256,5,0).__dict__,
+   process('ps2',256,9,2).__dict__,
+   process('ps3',256,1,2).__dict__,
+   process('ps4',256,5,0).__dict__,
+   process('ps5',256,5,0).__dict__,
+   process('ps6',256,20,0).__dict__,
+   process('ps7',256,17,0).__dict__,
+   process('ps8',256,3,0).__dict__,
+   process('ps9',256,8,0).__dict__,
+   process('ps10',256,25,0).__dict__,
+   process('ps11',256,3,0).__dict__,
+   process('ps12',256,3,2).__dict__,]
 
 # M=Memory(8192) # simulazione di 1 KB RAM 
 # for x in P:
@@ -108,7 +113,7 @@ P=[process('process1',256,5,0).__dict__,
 #     M.allocate(x.memory_required)
 
 
-S=scheduler(P,maxSize=2)
+S=scheduler(P,maxSize=10)
 # S.bulbe_sort()
 S.queue()
 print(S.round_robin())
