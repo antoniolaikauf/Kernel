@@ -1,20 +1,15 @@
-'''
-
-In SJF, the CPU is allocated to the 
-process with smallest burst time. When the CPU becomes available, it is assigned to the process 
-that has the smallest next CPU burst tipo di priorità
-
-'''
-
 import time 
+import sys
 from datetime import datetime
 from termcolor import colored, cprint 
 from memory import Memory
 '''
 Burst_Time would be the time that the proccess need to be executes call BURST TIME
 '''
-
-# arrival time 
+SJF=False
+if len(sys.argv) > 2: raise Exception('add more than two parapeters')
+if len(sys.argv) == 2: 
+  SJF=True
 class process:
     def __init__(self, name, memory_required, Burst_Time, arrival_time): # Burst_Time is in milliseconds
         self.name=name
@@ -49,14 +44,14 @@ class scheduler: # gestione processi
         self.Quantum=Quantum 
         self.Q=[]
     
-    def bulbe_sort(self):
-        pass
-        # L=len(self.n_process) - 1
-        # for y in range(L): #time O(n**2)
-        #     for j in range((L) - y):
-        #         if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
-        #             self.n_process[j]['Burst_Time'] , self.n_process[j + 1]['Burst_Time'] = self.n_process[j + 1]['Burst_Time'], self.n_process[j]['Burst_Time'] 
-        # return self.n_process
+    def bulbe_sort(self): # implementazione SJF 
+        L=len(self.n_process) - 1
+        for y in range(L): #time O(n**2)
+            for j in range((L) - y):
+                if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
+                    self.n_process[j] , self.n_process[j + 1] = self.n_process[j + 1], self.n_process[j] 
+        print(self.n_process)
+        return self.n_process
     
     def queue(self):
         queue=[]
@@ -113,8 +108,8 @@ P=[process('ps1',256,5,0).__dict__,
 #     M.allocate(x.memory_required)
 
 
-S=scheduler(P,maxSize=10)
-# S.bulbe_sort()
+S=scheduler(P,maxSize=4)
+if SJF: S.bulbe_sort()
 S.queue()
 print(S.round_robin())
 # Memory management in Python involves a private heap containing all Python objects and data structures.

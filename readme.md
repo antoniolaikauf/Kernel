@@ -39,7 +39,6 @@ all process in order \
 Instead of a simple FIFO queue, processes can be placed in a priority queue. In this queue, processes with a higher priority are executed before those with a lower priority, regardless of their order of arrival.
 If a high-priority process arrives while a low-priority process is running, the system can interrupt (preempt) the running process and give precedence to the high-priority process.
 
-
 # Type of kernel 
 there are four categories of kernel 
 - **kernel monolitici** 
