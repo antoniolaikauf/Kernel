@@ -6,12 +6,12 @@ from memory import Memory
 '''
 Burst_Time would be the time that the proccess need to be executes call BURST TIME
 '''
-SJF=False
+sjf=False
 if len(sys.argv) > 2: raise Exception('add more than two parapeters')
 if len(sys.argv) == 2: 
-  SJF=True
+  sjf=True
 class process:
-    def __init__(self, name, memory_required, Burst_Time, arrival_time): # Burst_Time is in milliseconds
+    def __init__(self, name, memory_required, Burst_Time, arrival_time): 
         self.name=name
         self.memory_required=memory_required
         self.Burst_Time=Burst_Time
@@ -38,20 +38,11 @@ class process:
  Shortest Job First chi ha il Burst_Time piu basso ha una priorità più alta 
 '''
 class scheduler: # gestione processi
-    def __init__(self, n_process, Quantum=5, maxSize=2):
+    def __init__(self, n_process, maxSize=2):
         self.n_process= n_process
         self.maxSize=maxSize
-        self.Quantum=Quantum 
+        # self.Quantum=Quantum 
         self.Q=[]
-    
-    def bulbe_sort(self): # implementazione SJF 
-        L=len(self.n_process) - 1
-        for y in range(L): #time O(n**2)
-            for j in range((L) - y):
-                if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
-                    self.n_process[j] , self.n_process[j + 1] = self.n_process[j + 1], self.n_process[j] 
-        print(self.n_process)
-        return self.n_process
     
     def queue(self):
         queue=[]
@@ -68,6 +59,17 @@ class scheduler: # gestione processi
         #     queue.append(self.n_process[i])
         #     print(queue)
         # return queue  #preparation queue follow Algorithms ORR or SORR (the best)
+
+    
+    def SJF(self): # implementazione SJF 
+        L=len(self.n_process) - 1
+        for y in range(L): #time O(n**2)
+            for j in range((L) - y):
+                if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
+                    self.n_process[j] , self.n_process[j + 1] = self.n_process[j + 1], self.n_process[j] 
+        print(self.n_process)
+        return self.n_process
+    
 
     def round_robin(self):
         complete_process=[]
@@ -86,8 +88,26 @@ class scheduler: # gestione processi
 
         return complete_process
     
-    def __str__(self):
-       return str(self.Q)
+    # def __str__(self):
+    #    return str(self.Q)
+
+
+class round_robin(scheduler):
+    def __init__(self, n_process, maxSize=2, Quantum=5):
+        super().__init__(n_process, maxSize)
+        self.Quantum=Quantum
+    
+    def run(self):
+        print(self.n_process)
+
+class SJF(scheduler):
+    def __init__(self, n_process, maxSize=2):
+        super().__init__(n_process, maxSize)
+    
+    def run():
+        pass
+
+
 
 P=[process('ps1',256,5,0).__dict__,
    process('ps2',256,9,2).__dict__,
@@ -107,10 +127,13 @@ P=[process('ps1',256,5,0).__dict__,
 #     x.run(10)
 #     M.allocate(x.memory_required)
 
+maxSize=4
+S=scheduler(P,maxSize)
+Q=S.queue()
 
-S=scheduler(P,maxSize=4)
-if SJF: S.bulbe_sort()
-S.queue()
-print(S.round_robin())
+RR= round_robin(Q, maxSize, Quantum=6)
+RR.run()
+# if sjf: S.SJF()
+# print(S.round_robin())
 # Memory management in Python involves a private heap containing all Python objects and data structures.
 
