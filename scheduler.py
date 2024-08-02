@@ -18,14 +18,8 @@ class process:
         self.remaining_time=Burst_Time
         self.arrival_time=arrival_time
         self.waiting_time=0
-
-    # def __str__(self):
-    #     return {'name':self.name}
-    
-    # def __repr__(self):
-    #    return  process.__str__(self)
         
-    def run(self): # Quantum is in milliseconds
+    def run(self):
         # T=max(self.remaining_time,Quantum)
         # T-=Quantum
         # time.sleep(T * 0.1) # milliseconds
@@ -41,15 +35,14 @@ class scheduler: # gestione processi
     def __init__(self, n_process, maxSize=2):
         self.n_process= n_process
         self.maxSize=maxSize
-        # self.Quantum=Quantum 
         self.Q=[]
     
     def queue(self):
-        queue=[]
         if self.maxSize == 0: return 'infinite queue'
         elif len(self.n_process) > self.maxSize:
             self.n_process=self.n_process[:self.maxSize] # fewer elements compared to maxSize
         return self.n_process  #preparation queue follow Algorithms ORR or SORR (the best)
+        # queue=[]
         # if len(self.n_process) > self.maxSize: # fewer elements compared to maxSize
         #      self.n_process=self.n_process[:self.maxSize]
         # for i in range(len(self.n_process)):
@@ -59,19 +52,17 @@ class scheduler: # gestione processi
         #     queue.append(self.n_process[i])
         #     print(queue)
         # return queue  #preparation queue follow Algorithms ORR or SORR (the best)
-
     
-    def SJF(self): # implementazione SJF 
-        L=len(self.n_process) - 1
-        for y in range(L): #time O(n**2)
-            for j in range((L) - y):
-                if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']: 
-                    self.n_process[j] , self.n_process[j + 1] = self.n_process[j + 1], self.n_process[j] 
-        print(self.n_process)
-        return self.n_process
-    
+    # def __str__(self):
+    #    return str(self.Q)
 
-    def round_robin(self):
+
+class round_robin(scheduler):
+    def __init__(self, n_process, maxSize=2, Quantum=5):
+        super().__init__(n_process, maxSize)
+        self.Quantum=Quantum
+    
+    def run(self):
         complete_process=[]
         
         while self.n_process != []: # methods n queue
@@ -87,26 +78,21 @@ class scheduler: # gestione processi
                 self.n_process= self.n_process[1:] + [self.n_process[0]] # elemento aggiunto alla coda della queue
 
         return complete_process
-    
-    # def __str__(self):
-    #    return str(self.Q)
 
-
-class round_robin(scheduler):
-    def __init__(self, n_process, maxSize=2, Quantum=5):
-        super().__init__(n_process, maxSize)
-        self.Quantum=Quantum
-    
-    def run(self):
-        print(self.n_process)
-
-class SJF(scheduler):
+class Shortest_Job_First(scheduler):
     def __init__(self, n_process, maxSize=2):
         super().__init__(n_process, maxSize)
     
-    def run():
-        pass
+    def run(self):
+        L=len(self.n_process) - 1 
+        for y in range (L):
+            for j in range(L - y):
+                if self.n_process[j]['Burst_Time'] > self.n_process[j + 1]['Burst_Time']:
+                    self.n_process[j], self.n_process[j + 1] = self.n_process[j + 1] , self.n_process[j]
 
+        for x in self.n_process:
+            time.sleep(x['Burst_Time'])
+            print(f"process finished:{colored(x['name'],'red')}")
 
 
 P=[process('ps1',256,5,0).__dict__,
@@ -132,7 +118,12 @@ S=scheduler(P,maxSize)
 Q=S.queue()
 
 RR= round_robin(Q, maxSize, Quantum=6)
-RR.run()
+SJF=Shortest_Job_First(Q,maxSize)
+
+print(SJF.run())
+# print(RR.run())
+
+
 # if sjf: S.SJF()
 # print(S.round_robin())
 # Memory management in Python involves a private heap containing all Python objects and data structures.
