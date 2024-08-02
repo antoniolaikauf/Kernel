@@ -1,8 +1,11 @@
 import time 
 import sys
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 from datetime import datetime
 from termcolor import colored, cprint 
 from memory import Memory
+
 '''
 Burst_Time would be the time that the proccess need to be executes call BURST TIME
 '''
@@ -94,6 +97,16 @@ class Shortest_Job_First(scheduler):
             time.sleep(x['Burst_Time'])
             print(f"process finished:{colored(x['name'],'red')}")
 
+    def graph(self):
+        run_time=[x['Burst_Time'] for x in self.n_process]
+        n_process=[x['name'] for x in self.n_process]
+        fig, ax = plt.subplots() 
+        ax.bar(n_process, run_time)
+        plt.gca().yaxis.set_major_formatter(mticker.FormatStrFormatter('%.1f s'))
+        plt.xlabel('Process')
+        plt.ylabel('Burst Time')
+        plt.show()
+
 
 P=[process('ps1',256,5,0).__dict__,
    process('ps2',256,9,2).__dict__,
@@ -113,14 +126,15 @@ P=[process('ps1',256,5,0).__dict__,
 #     x.run(10)
 #     M.allocate(x.memory_required)
 
-maxSize=4
+maxSize=20
 S=scheduler(P,maxSize)
 Q=S.queue()
 
 RR= round_robin(Q, maxSize, Quantum=6)
 SJF=Shortest_Job_First(Q,maxSize)
 
-print(SJF.run())
+# print(SJF.run())
+SJF.graph()
 # print(RR.run())
 
 
