@@ -95,10 +95,10 @@ class round_robin(scheduler):
         for T in self.complete_process:  
             self.T_process[T['name']]['Time_Turnaround'] = self.T_process[T['name']]['Completion_time'] -  T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
             self.T_process[T['name']]['Waitng_time'] = self.T_process[T['name']]['Time_Turnaround'] - T['Burst_Time'] #This is the time a process spends waiting in the queue # formula Waitng_time = Time_Turnaround - Burst_Time
-
-        Average_Wait_time=sum(self.T_process['Waitng_time'])
-        print(Average_Wait_time / len(self.T_process) )
-        print(self.T_process)
+        
+        # average time of the scheduler 
+        Average_Wait_time=sum(self.T_process[x]['Waitng_time'] for x in self.T_process) / len(self.T_process)
+        print(f"Average Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
         return self.complete_process
     
     def graph(self): #Gantt chart
