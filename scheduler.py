@@ -36,26 +36,25 @@ class scheduler: # gestione processi
         return self.n_process  #preparation queue follow Algorithms ORR or SORR (the best)
     
     '''
-    in round robin the uqueue is ordered by the arrival time 
-    es name,  arrival time   burst time 
-       ps1    0              5
-       ps2    1              4
-       ps3    2              2
-    with an quantum of 2 
-    the start queue is form by ps1 ps2
-    the first cicle is ps1 and arrive ps3, 
-    the second cicle is ps2 
-    the third cicle is ps3 and exit the queue
-    the fourth cicle is ps1
-    the sixth cicle is ps2 and exit the queue
-    the seventh cicle is ps1 and exit the queue
-    so the queue must always lsten if is coming a process, but i don't know how to do with python because with time.sleep block the code 
+    Example: name, arrival time, burst time 
+              ps1    0              5
+              ps2    1              4
+              ps3    2              2
+    With a quantum of 2, 
+    the start queue is formed by ps1 and ps2.
+    In the first cycle, ps1 executes and ps3 arrives.
+    In the second cycle, ps2 executes.
+    In the third cycle, ps3 executes and exits the queue.
+    In the fourth cycle, ps1 executes.
+    In the fifth cycle, ps2 executes and exits the queue.
+    In the sixth cycle, ps1 executes and exits the queue.
+    So the queue must always check if a process is arriving, but I don't know how to do this in Python because `time.sleep` blocks the code.
     '''
 
     '''
-    in JSF there is a queue but is just use to put the process because the process they are not execut is order but in base a privilage 
-    that can be for JSF the burst time, the shortest burst time start first, if in the scheduler there are already a process in execution could be stoped
-    if arrived a process with shortest burst time 
+    In JSF, there is a queue used to hold the processes, but they are not executed in order. Instead, they are scheduled based on a priority, 
+    which can be the burst time. In JSF, the process with the shortest burst time starts first. If a process with a shorter burst time arrives 
+    while another process is already executing, the current process can be stopped to allow the new process to execute.
     '''
     
 
@@ -67,12 +66,19 @@ class round_robin(scheduler):
     def __init__(self, n_process, maxSize=2, Quantum=5):
         super().__init__(n_process, maxSize)
         self.Quantum=Quantum
-        self.G=[]
+        self.G=[] #G =graph
         self.complete_process=[]
+        self.Completion_time = 0 # how much time you need for every process to be compleated 
+        self.T_process={}
     
     def run(self):
         
         while self.n_process != []:
+            if self.n_process[0]['remaining_time'] < self.Quantum: self.Completion_time+=self.n_process[0]['remaining_time']
+            else: self.Completion_time+=self.Quantum
+
+            self.T_process[self.n_process[0]['name']] = {'Completion_time':self.Completion_time}
+
             time.sleep(self.Quantum)
             self.G.append({'name':self.n_process[0]['name'], 'time':self.n_process[0]['remaining_time']})
             self.n_process[0]['remaining_time'] -= self.Quantum
@@ -85,9 +91,15 @@ class round_robin(scheduler):
             else: # put porcces at the end of the queue
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [self.n_process[0]]
+        
+        print(self.T_process)
+
+        print(self.Completion_time)
         return self.complete_process
     
-    def graph(self):
+    def graph(self): #Gantt chart
+        NSPi=[(b['Burst_Time'] / self.Quantum) for b in self.complete_process]
+        print(NSPi)
         x=[j['name'] for j in self.G]
         y = [i['time'] for i in self.G]
         fig,ax=plt.subplots()
@@ -117,7 +129,7 @@ class Shortest_Job_First(scheduler):
             time.sleep(x['Burst_Time'])
             print(f"process finished:{colored(x['name'],'red')}")
 
-    def graph(self): #draw graph with burst time 
+    def graph(self): # draw graph with burst time 
         run_time=[x['Burst_Time'] for x in self.n_process]
         n_process=[x['name'] for x in self.n_process]
         fig, ax = plt.subplots() 
@@ -128,9 +140,11 @@ class Shortest_Job_First(scheduler):
         plt.show()
 
 # name, memory, burst time, arrival time 
-P=[process('ps1',256,8,0).__dict__,
-   process('ps2',256,5,2).__dict__,
-   process('ps3',256,10,3).__dict__,
+P=[process('ps1',256,5,1).__dict__,
+   process('ps2',256,4,2).__dict__,
+   process('ps3',256,2,3).__dict__,]
+
+'''
    process('ps4',256,6,4).__dict__,
    process('ps5',256,5,6).__dict__,
    process('ps6',256,20,8).__dict__,
@@ -139,14 +153,15 @@ P=[process('ps1',256,8,0).__dict__,
    process('ps9',256,8,11).__dict__,
    process('ps10',256,25,13).__dict__,
    process('ps11',256,3,14).__dict__,
-   process('ps12',256,3,16).__dict__,]
+   process('ps12',256,3,16).__dict__,
+'''
 
 # M=Memory(8192) # simulazione di 1 KB RAM 
 # for x in P:
 #     x.run(10)
 #     M.allocate(x.memory_required)
 
-maxSize=1
+maxSize=20
 S=scheduler(P,maxSize)
 Q=S.queue()
 if sjf:
