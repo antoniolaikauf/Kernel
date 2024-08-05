@@ -69,6 +69,7 @@ class round_robin(scheduler):
         self.G=[] #G =graph
         self.complete_process=[]
         self.Completion_time = 0 # how much time you need for every process to be compleated 
+        self.Time_Turnaround=0 # (TAT) time when the process is arrived at the queue
         self.T_process={}
     
     def run(self):
@@ -91,10 +92,11 @@ class round_robin(scheduler):
             else: # put porcces at the end of the queue
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [self.n_process[0]]
-        
-        print(self.T_process)
 
-        print(self.Completion_time)
+        # formula Time_Turnaround = Completion_time - arrival_time
+        for T in self.complete_process:  self.T_process[T['name']]['Time_Turnaround'] =self.T_process[T['name']]['Completion_time'] -  T['arrival_time']
+
+        print(self.T_process)
         return self.complete_process
     
     def graph(self): #Gantt chart
@@ -167,8 +169,8 @@ Q=S.queue()
 if sjf:
     SJF=Shortest_Job_First(Q,maxSize)
     print(SJF.run())
-    SJF.graph()
+    # SJF.graph()
 elif rr:
     RR= round_robin(Q, maxSize, Quantum=2)
     print(RR.run())
-    print(RR.graph())
+    # print(RR.graph())
