@@ -50,27 +50,43 @@ class scheduler: # gestione processi
 '''
  Quantum/time interval is the time the the scheduler give to all process 
 '''
+
+# TODO fare grafico 
 class round_robin(scheduler):
     def __init__(self, n_process, maxSize=2, Quantum=5):
         super().__init__(n_process, maxSize)
         self.Quantum=Quantum
+        self.G=[]
+        self.complete_process=[]
     
     def run(self):
-        complete_process=[]
         
         while self.n_process != []:
             time.sleep(self.Quantum)
+            self.G.append({'name':self.n_process[0]['name'], 'time':self.n_process[0]['remaining_time']})
             self.n_process[0]['remaining_time'] -= self.Quantum
+
             if self.n_process[0]['remaining_time'] <= 0: #remove process from queue 
                self.n_process[0]['remaining_time']=0
                print(f"process finished:{colored(self.n_process[0]['name'],'red')}")
-               complete_process.append(self.n_process[0])
+               self.complete_process.append(self.n_process[0])
                self.n_process.pop(0)
             else: # put porcces at the end of the queue
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
-                self.n_process= self.n_process[1:] + [self.n_process[0]] 
+                self.n_process= self.n_process[1:] + [self.n_process[0]]
+        # return self.complete_process
+    
+    def graph(self):
+        x=[j['name'] for j in self.G]
+        y = [i['time'] for i in self.G]
+        fig,ax=plt.subplots()
+        ax.plot(x, y, 'ro')
+        plt.gca().yaxis.set_major_formatter(mticker.FormatStrFormatter('%.1f s'))
 
-        return complete_process
+        plt.text(0.99, 1.05, 'From top to bottm', horizontalalignment='right', verticalalignment='top', transform = ax.transAxes, backgroundcolor='0.75')
+        plt.xlabel('process')
+        plt.ylabel('Run time - Quantum')
+        plt.show()
 
 '''
 Shortest Job First chi ha il Burst_Time piu basso ha una priorità più alta 
@@ -101,10 +117,10 @@ class Shortest_Job_First(scheduler):
         plt.show()
 
 
-P=[process('ps1',256,1,0).__dict__,
-   process('ps2',256,1,2).__dict__,
-   process('ps3',256,1,2).__dict__,
-   process('ps4',256,5,0).__dict__,
+P=[process('ps1',256,8,0).__dict__,
+   process('ps2',256,5,2).__dict__,
+   process('ps3',256,10,2).__dict__,
+   process('ps4',256,6,0).__dict__,
    process('ps5',256,5,0).__dict__,
    process('ps6',256,20,0).__dict__,
    process('ps7',256,17,0).__dict__,
@@ -119,7 +135,7 @@ P=[process('ps1',256,1,0).__dict__,
 #     x.run(10)
 #     M.allocate(x.memory_required)
 
-maxSize=5
+maxSize=1
 S=scheduler(P,maxSize)
 Q=S.queue()
 if sjf:
@@ -127,8 +143,9 @@ if sjf:
     print(SJF.run())
     SJF.graph()
 elif rr:
-    RR= round_robin(Q, maxSize, Quantum=6)
+    RR= round_robin(Q, maxSize, Quantum=2)
     print(RR.run())
+    print(RR.graph())
 
 # Memory management in Python involves a private heap containing all Python objects and data structures.
 
