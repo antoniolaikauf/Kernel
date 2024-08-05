@@ -60,6 +60,34 @@ class Memory: #allocazione memoria
 M=Memory()
 M.allocate(20)
 
+
+'''
+In a paging memory management system, the virtual address space is divided into fixed-size blocks called pages, which are mapped to physical memory frames. The virtual address consists of two parts: the page number and the offset within the page.
+Calculating the Page Number and Offset
+Given:
+Virtual address space: 32 bits (4 GB)
+Page size: 2^8 bytes (256 bytes)
+Page size: 2^8 bytes = 256 bytes
+Number of pages: 2^32 / 2^8 = 2^24 pages
+Page number: 2^24 bits (24 bits)
+Offset: 2^8 bits (8 bits)
+To calculate the physical address:
+Page number = virtual address / page size
+Offset = virtual address % page size
+For example, if the virtual address is 0x12345678:
+Page number = 0x12345 (18 bits)
+Offset = 0x78 (8 bits)
+The page number is used to index the page table, which stores the mapping between virtual pages and physical frames. The offset is combined with the base address of the physical frame to obtain the final physical address.
+Page Table Size
+The size of the page table depends on the number of entries and the size of each entry.
+Given:
+Number of pages: 2^24
+Entry size: 4 bytes (32 bits)
+Page table size = Number of entries × Entry size
+Page table size = 2^24 × 4 bytes = 2^24 × 2^2 bytes = 2^26 bytes = 64 MB
+In summary, with a 32-bit virtual address space and 256-byte pages, the page number is 24 bits, the offset is 8 bits, and the page table size for a process with 2^24 pages using 4-byte entries is 64 MB
+
+'''
 #  https://www2.cs.uregina.ca/~hamilton/courses/330/notes/memory/paging.html
 
 # Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
