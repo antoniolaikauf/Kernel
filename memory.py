@@ -1,16 +1,36 @@
-
-'''
-Memoria Virtuale: è uno spazio che si trova sul disco rigido o SSD e viene usata quando lo spazio nella RAM viene esaurito 
-Paging: divide la memoria SSD e RAM in blocchi fissi chiamati FRAME in RAM e PAGINE nella SSD 
-Quando un processo accede a un indirizzo di memoria virtuale, il sistema operativo traduce questo indirizzo in un indirizzo fisico utilizzando la tabella delle pagine.
-Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
-Allocazione della Memoria: Gestisce come e dove vengono allocati i blocchi di memoria, per evitare la frammentazione e garantire l'efficienza.
-Context Switching: Gestisce il salvataggio e il ripristino dello stato dei processi quando il CPU scheduler cambia da un processo a un altro. 
-'''
-
-
 from termcolor import colored, cprint 
 import time 
+
+
+# class Memory:
+#     def __init__(self):
+#         self.Memoria_Virtuale = 32 # KB
+#         self.Memoria_Fisica = 16 # KB
+#         self.M_pages = 4 # KB per pagina
+#         self.page_table = []
+#         self.free_frames = list(range(self.Memoria_Fisica // self.M_pages))
+
+#     def allocate(self, memory):
+#         num_pages = (memory + self.M_pages - 1) // self.M_pages  # Round up division
+#         total_pages = int(self.Memoria_Virtuale / self.M_pages)
+        
+#         # Initialize page table with None values
+#         self.page_table = [{'pages SSD': i, 'frame RAM': None} for i in range(total_pages)]
+        
+#         # Allocate frames to pages
+#         for page in range(num_pages):
+#             if self.free_frames:
+#                 frame = self.free_frames.pop(0)
+#                 self.page_table[page]['frame RAM'] = frame
+#             else:
+#                 print("No more frames available.")
+#                 break
+        
+#         print(self.page_table)
+
+# # Test the Memory class
+# M = Memory()
+# M.allocate(20)  # Allocate 8 KB of memory
 
 '''
 Concorrenza e Sicurezza:
@@ -39,31 +59,43 @@ Waiting time: Sum of time a process spent waiting in ready queue
     #     def run(self):
 #         print(self.memory.allocate(200))
 '''
+quando un processo viene creato viene creato nella RAM e ad ogni pagina viene data un fraim nella SSD (fino a quando la sua memoria non finisce) e all'interno di questi fraim c'è la pagina 
 processo occupa 200bytes di memoria quindi neanche un KB di memoria verra allocata semplicemnete in una pagina, ma se supera la quantita di memoria
 di una pagina allora il rimanente verra allocata li e se non occupa interamnete quella pagina allora quella pagina avrà dello spazio free (questo viene chiamato internal fragmentation)
 perche le grandezze delle pagine sono fisse 
+
+Memoria Virtuale: è uno spazio che si trova sul disco rigido o SSD e viene usata quando lo spazio nella RAM viene esaurito 
+Paging: divide la memoria SSD e RAM in blocchi fissi chiamati FRAME in RAM e PAGINE nella SSD 
+Quando un processo accede a un indirizzo di memoria virtuale, il sistema operativo traduce questo indirizzo in un indirizzo fisico utilizzando la tabella delle pagine.
+
 '''
 
 class Memory: #allocazione memoria
     def __init__(self):
-        self.Memoria_Virtuale= 32 # KB SSD
-        self.Memoria_Fisica= 16 # KB RAM
+        self.Memoria_Virtuale= 32 # KB SSD phisical memory 
+        self.Memoria_Fisica= 16 # KB RAM logical memory 
         self.M_pages=4
-        self.memory= None
+        self.page_table= None
         self.used_memory=0
 
     def allocate(self,memory):
-        self.memory=[{'pages':x, 'frame': x if x < self.Memoria_Fisica / self.M_pages else None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
-        nums_pages=memory // self.M_pages 
+        # in pages x dovrebbe esserci la rappresentazione di bits es 00000001 fino ad arrivare 11111111 
+        # ogni pages ha vari address  
+        self.page_table=[{'pages SSD':x, 'frame RAM': None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
+        for x in range(self.Memoria_Fisica // self.M_pages):
+            memory -= self.M_pages
+            if memory >= 0 : self.page_table[x]['frame RAM'] = x
+            else :break
+
+        print(self.page_table)
         # self.used_memory += memory
         # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
         # else: raise Exception(f'memoria allocata {self.used_memory} supera {memory}')
-        
-    
-    def free(self, memory):
-        self.used_memory -= memory
-        print(f'memoria liberata di {memory}')
 
 
 M=Memory()
-M.allocate(4)
+M.allocate(20)
+
+# Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
+# Allocazione della Memoria: Gestisce come e dove vengono allocati i blocchi di memoria, per evitare la frammentazione e garantire l'efficienza.
+# Context Switching: Gestisce il salvataggio e il ripristino dello stato dei processi quando il CPU scheduler cambia da un processo a un altro.
