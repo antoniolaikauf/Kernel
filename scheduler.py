@@ -2,7 +2,6 @@ import time
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-from datetime import datetime
 from termcolor import colored, cprint 
 from memory import Memory
 
@@ -35,23 +34,35 @@ class scheduler: # gestione processi
         elif len(self.n_process) > self.maxSize:
             self.n_process=self.n_process[:self.maxSize] # fewer elements compared to maxSize
         return self.n_process  #preparation queue follow Algorithms ORR or SORR (the best)
-        # queue=[]
-        # if len(self.n_process) > self.maxSize: # fewer elements compared to maxSize
-        #      self.n_process=self.n_process[:self.maxSize]
-        # for i in range(len(self.n_process)):
-        #     # start_time = datetime.now()
-        #     # print(start_time)
-        #     time.sleep(self.n_process[i]['arrival_time'])
-        #     queue.append(self.n_process[i])
-        #     print(queue)
-        # return queue  #preparation queue follow Algorithms ORR or SORR (the best)
+    
+    '''
+    in round robin the uqueue is ordered by the arrival time 
+    es name,  arrival time   burst time 
+       ps1    0              5
+       ps2    1              4
+       ps3    2              2
+    with an quantum of 2 
+    the start queue is form by ps1 ps2
+    the first cicle is ps1 and arrive ps3, 
+    the second cicle is ps2 
+    the third cicle is ps3 and exit the queue
+    the fourth cicle is ps1
+    the sixth cicle is ps2 and exit the queue
+    the seventh cicle is ps1 and exit the queue
+    so the queue must always lsten if is coming a process, but i don't know how to do with python because with time.sleep block the code 
+    '''
+
+    '''
+    in JSF there is a queue but is just use to put the process because the process they are not execut is order but in base a privilage 
+    that can be for JSF the burst time, the shortest burst time start first, if in the scheduler there are already a process in execution could be stoped
+    if arrived a process with shortest burst time 
+    '''
     
 
 '''
  Quantum/time interval is the time the the scheduler give to all process 
 '''
 
-# TODO fare grafico 
 class round_robin(scheduler):
     def __init__(self, n_process, maxSize=2, Quantum=5):
         super().__init__(n_process, maxSize)
@@ -74,7 +85,7 @@ class round_robin(scheduler):
             else: # put porcces at the end of the queue
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [self.n_process[0]]
-        # return self.complete_process
+        return self.complete_process
     
     def graph(self):
         x=[j['name'] for j in self.G]
@@ -116,19 +127,19 @@ class Shortest_Job_First(scheduler):
         plt.ylabel('Burst Time')
         plt.show()
 
-
+# name, memory, burst time, arrival time 
 P=[process('ps1',256,8,0).__dict__,
    process('ps2',256,5,2).__dict__,
-   process('ps3',256,10,2).__dict__,
-   process('ps4',256,6,0).__dict__,
-   process('ps5',256,5,0).__dict__,
-   process('ps6',256,20,0).__dict__,
-   process('ps7',256,17,0).__dict__,
-   process('ps8',256,3,0).__dict__,
-   process('ps9',256,8,0).__dict__,
-   process('ps10',256,25,0).__dict__,
-   process('ps11',256,3,0).__dict__,
-   process('ps12',256,3,2).__dict__,]
+   process('ps3',256,10,3).__dict__,
+   process('ps4',256,6,4).__dict__,
+   process('ps5',256,5,6).__dict__,
+   process('ps6',256,20,8).__dict__,
+   process('ps7',256,17,9).__dict__,
+   process('ps8',256,3,10).__dict__,
+   process('ps9',256,8,11).__dict__,
+   process('ps10',256,25,13).__dict__,
+   process('ps11',256,3,14).__dict__,
+   process('ps12',256,3,16).__dict__,]
 
 # M=Memory(8192) # simulazione di 1 KB RAM 
 # for x in P:
@@ -146,6 +157,3 @@ elif rr:
     RR= round_robin(Q, maxSize, Quantum=2)
     print(RR.run())
     print(RR.graph())
-
-# Memory management in Python involves a private heap containing all Python objects and data structures.
-
