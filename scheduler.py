@@ -1,12 +1,3 @@
-'''
-Memoria Virtuale: è uno spazio che si trova sul disco rigido o SSD e viene usata quando lo spazio nella RAM viene esaurito 
-Paging: divide la memoria SSD e RAM in blocchi fissi chiamati FRAME in RAM e PAGINE nella SSD 
-Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
-Allocazione della Memoria: Gestisce come e dove vengono allocati i blocchi di memoria, per evitare la frammentazione e garantire l'efficienza.
-Context Switching: Gestisce il salvataggio e il ripristino dello stato dei processi quando il CPU scheduler cambia da un processo a un altro. 
-
-'''
-
 import time 
 import sys
 import matplotlib.pyplot as plt

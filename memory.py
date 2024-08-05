@@ -1,4 +1,14 @@
 
+'''
+Memoria Virtuale: è uno spazio che si trova sul disco rigido o SSD e viene usata quando lo spazio nella RAM viene esaurito 
+Paging: divide la memoria SSD e RAM in blocchi fissi chiamati FRAME in RAM e PAGINE nella SSD 
+Quando un processo accede a un indirizzo di memoria virtuale, il sistema operativo traduce questo indirizzo in un indirizzo fisico utilizzando la tabella delle pagine.
+Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
+Allocazione della Memoria: Gestisce come e dove vengono allocati i blocchi di memoria, per evitare la frammentazione e garantire l'efficienza.
+Context Switching: Gestisce il salvataggio e il ripristino dello stato dei processi quando il CPU scheduler cambia da un processo a un altro. 
+'''
+
+
 from termcolor import colored, cprint 
 import time 
 
@@ -26,20 +36,25 @@ Waiting time: Sum of time a process spent waiting in ready queue
 #     def __init__(self, sheduler):
 #         self.memory= Memory(1024)
 #         self.scheduler=sheduler
-    
-#     def run(self):
+    #     def run(self):
 #         print(self.memory.allocate(200))
-        
+'''
+processo occupa 200bytes di memoria quindi neanche un KB di memoria verra allocata semplicemnete in una pagina, ma se supera la quantita di memoria
+di una pagina allora il rimanente verra allocata li e se non occupa interamnete quella pagina allora quella pagina avrà dello spazio free (questo viene chiamato internal fragmentation)
+perche le grandezze delle pagine sono fisse 
+'''
 
 class Memory: #allocazione memoria
     def __init__(self):
-        self.Memoria_Virtuale= 32 #SSD
-        self.Memoria_Fisica= 16 #RAM
+        self.Memoria_Virtuale= 32 # KB SSD
+        self.Memoria_Fisica= 16 # KB RAM
+        self.M_pages=4
         self.memory= None
         self.used_memory=0
 
-    def allocate(self):
-        self.memory=[{'pages':x, 'frame': x if x < self.Memoria_Fisica / 4 else None}  for x in range(int(self.Memoria_Virtuale / 4)) ] #map of memory
+    def allocate(self,memory):
+        self.memory=[{'pages':x, 'frame': x if x < self.Memoria_Fisica / self.M_pages else None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
+        nums_pages=memory // self.M_pages 
         # self.used_memory += memory
         # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
         # else: raise Exception(f'memoria allocata {self.used_memory} supera {memory}')
@@ -51,4 +66,4 @@ class Memory: #allocazione memoria
 
 
 M=Memory()
-M.allocate()
+M.allocate(4)
