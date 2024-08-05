@@ -69,7 +69,6 @@ class round_robin(scheduler):
         self.G=[] #G =graph
         self.complete_process=[]
         self.Completion_time = 0 # how much time you need for every process to be compleated 
-        self.Time_Turnaround=0 # (TAT) time when the process is arrived at the queue
         self.T_process={}
     
     def run(self):
@@ -93,9 +92,12 @@ class round_robin(scheduler):
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [self.n_process[0]]
 
-        # formula Time_Turnaround = Completion_time - arrival_time
-        for T in self.complete_process:  self.T_process[T['name']]['Time_Turnaround'] =self.T_process[T['name']]['Completion_time'] -  T['arrival_time']
+        for T in self.complete_process:  
+            self.T_process[T['name']]['Time_Turnaround'] = self.T_process[T['name']]['Completion_time'] -  T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
+            self.T_process[T['name']]['Waitng_time'] = self.T_process[T['name']]['Time_Turnaround'] - T['Burst_Time'] #This is the time a process spends waiting in the queue # formula Waitng_time = Time_Turnaround - Burst_Time
 
+        Average_Wait_time=sum(self.T_process['Waitng_time'])
+        print(Average_Wait_time / len(self.T_process) )
         print(self.T_process)
         return self.complete_process
     
