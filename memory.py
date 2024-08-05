@@ -32,16 +32,23 @@ Waiting time: Sum of time a process spent waiting in ready queue
         
 
 class Memory: #allocazione memoria
-    def __init__(self,memory):
-        self.memory= memory
+    def __init__(self):
+        self.Memoria_Virtuale= 32 #SSD
+        self.Memoria_Fisica= 16 #RAM
+        self.memory= None
         self.used_memory=0
 
-    def allocate(self,memory):
-        self.used_memory += memory
-        if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
-        else: raise Exception(f'memoria allocata {self.used_memory} supera {memory}')
+    def allocate(self):
+        self.memory=[{'pages':x, 'frame': x if x < self.Memoria_Fisica / 4 else None}  for x in range(int(self.Memoria_Virtuale / 4)) ] #map of memory
+        # self.used_memory += memory
+        # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
+        # else: raise Exception(f'memoria allocata {self.used_memory} supera {memory}')
         
     
     def free(self, memory):
         self.used_memory -= memory
         print(f'memoria liberata di {memory}')
+
+
+M=Memory()
+M.allocate()

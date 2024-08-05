@@ -1,3 +1,12 @@
+'''
+Memoria Virtuale: è uno spazio che si trova sul disco rigido o SSD e viene usata quando lo spazio nella RAM viene esaurito 
+Paging: divide la memoria SSD e RAM in blocchi fissi chiamati FRAME in RAM e PAGINE nella SSD 
+Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
+Allocazione della Memoria: Gestisce come e dove vengono allocati i blocchi di memoria, per evitare la frammentazione e garantire l'efficienza.
+Context Switching: Gestisce il salvataggio e il ripristino dello stato dei processi quando il CPU scheduler cambia da un processo a un altro. 
+
+'''
+
 import time 
 import sys
 import matplotlib.pyplot as plt
@@ -102,8 +111,6 @@ class round_robin(scheduler):
         return self.complete_process
     
     def graph(self): #Gantt chart
-        NSPi=[(b['Burst_Time'] / self.Quantum) for b in self.complete_process]
-        print(NSPi)
         x=[j['name'] for j in self.G]
         y = [i['time'] for i in self.G]
         fig,ax=plt.subplots()
@@ -111,6 +118,7 @@ class round_robin(scheduler):
         plt.gca().yaxis.set_major_formatter(mticker.FormatStrFormatter('%.1f s'))
 
         plt.text(0.99, 1.05, 'From top to bottm', horizontalalignment='right', verticalalignment='top', transform = ax.transAxes, backgroundcolor='0.75')
+        plt.text(0.99, 1.10, 'Quantum=' + str(self.Quantum), horizontalalignment='right', verticalalignment='top', transform = ax.transAxes, backgroundcolor='0.75')
         plt.xlabel('process')
         plt.ylabel('Run time - Quantum')
         plt.show()
@@ -171,8 +179,8 @@ Q=S.queue()
 if sjf:
     SJF=Shortest_Job_First(Q,maxSize)
     print(SJF.run())
-    # SJF.graph()
+    SJF.graph()
 elif rr:
     RR= round_robin(Q, maxSize, Quantum=2)
     print(RR.run())
-    # print(RR.graph())
+    RR.graph()
