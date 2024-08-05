@@ -1,43 +1,8 @@
 from termcolor import colored, cprint 
-import time 
+import time
 
 
-# class Memory:
-#     def __init__(self):
-#         self.Memoria_Virtuale = 32 # KB
-#         self.Memoria_Fisica = 16 # KB
-#         self.M_pages = 4 # KB per pagina
-#         self.page_table = []
-#         self.free_frames = list(range(self.Memoria_Fisica // self.M_pages))
 
-#     def allocate(self, memory):
-#         num_pages = (memory + self.M_pages - 1) // self.M_pages  # Round up division
-#         total_pages = int(self.Memoria_Virtuale / self.M_pages)
-        
-#         # Initialize page table with None values
-#         self.page_table = [{'pages SSD': i, 'frame RAM': None} for i in range(total_pages)]
-        
-#         # Allocate frames to pages
-#         for page in range(num_pages):
-#             if self.free_frames:
-#                 frame = self.free_frames.pop(0)
-#                 self.page_table[page]['frame RAM'] = frame
-#             else:
-#                 print("No more frames available.")
-#                 break
-        
-#         print(self.page_table)
-
-# # Test the Memory class
-# M = Memory()
-# M.allocate(20)  # Allocate 8 KB of memory
-
-'''
-Concorrenza e Sicurezza:
-In un sistema operativo reale, la gestione dei processi deve essere thread-safe, in quanto più thread o processi potrebbero tentare di accedere agli stessi dati.
-'''
-
-#i processori devono avere dei tempo in modo tale se non è completatto si interrompe il processo
 '''
 For example, if the time slot is 100 milliseconds, and job1 takes a total time of 250 ms to complete, the round-robin scheduler will suspend the job after 100 ms and give other jobs their time on the CPU.
 Once the other jobs have had their equal share (100 ms each), job1 will get another allocation of CPU time and the cycle will repeat
@@ -80,7 +45,7 @@ class Memory: #allocazione memoria
 
     def allocate(self,memory):
         # in pages x dovrebbe esserci la rappresentazione di bits es 00000001 fino ad arrivare 11111111 
-        # ogni pages ha vari address  
+        # ogni pages ha vari address (offset) 
         self.page_table=[{'pages SSD':x, 'frame RAM': None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
         for x in range(self.Memoria_Fisica // self.M_pages):
             memory -= self.M_pages
@@ -88,13 +53,14 @@ class Memory: #allocazione memoria
             else :break
 
         print(self.page_table)
-        # self.used_memory += memory
         # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
         # else: raise Exception(f'memoria allocata {self.used_memory} supera {memory}')
 
 
 M=Memory()
 M.allocate(20)
+
+#  https://www2.cs.uregina.ca/~hamilton/courses/330/notes/memory/paging.html
 
 # Swapping: Sposta i processi tra memoria fisica e memoria secondaria (disco) per ottimizzare l'uso della memoria.
 # Allocazione della Memoria: Gestisce come e dove vengono allocati i blocchi di memoria, per evitare la frammentazione e garantire l'efficienza.
