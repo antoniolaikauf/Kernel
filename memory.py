@@ -28,12 +28,19 @@ class Memory: #allocazione memoria
             pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) #frame for process
             for y in range(self.table_id, self.table_id + pages_need):
                 self.page_table[y]['NameP'] = process[x]['name']
-            if self.table_id < math.ceil(self.Memoria_Fisica / self.M_pages):
-                self.table_id += pages_need
-            else:
-                self.swapping(process[x]['memory_required'])
-                raise MemoryError('non abbastanza memoria')
+            self.table_id += pages_need
+            if self.table_id > math.ceil(self.Memoria_Fisica / self.M_pages):
+                self.table_id =0
 
+                def M_required(n):
+                    return n['memory_required']
+                Need_Memory=sum(map(M_required,process[x:]))
+
+                self.swapping(Need_Memory)
+                self.allocate(process[x:])
+                break
+            
+            
     def deallocate(self,process,memory):
         # fare map
         for x in self.page_table:
@@ -46,16 +53,14 @@ class Memory: #allocazione memoria
         che quindi può essere liberata e riallocata per i programmi che ne hanno bisogno. Questa porzione contiene
         i dati che hanno minore probabilità di essere richiesti nel futuro, e in genere sono quelli meno recentemente utilizzati.
         '''
-        n_pages=  space_memory // self.M_pages
+        n_pages=  space_memory // self.M_pages # necessary pages 
+        print(n_pages)
         for x in range(self.swapp_id, self.swapp_id + n_pages):
             SSD_pages= x + (self.Memoria_Fisica // self.M_pages)
             self.page_table[SSD_pages]['NameP'] = self.page_table[x]['NameP']
             self.page_table[x]['NameP'] = None
         if self.swapp_id > (self.Memoria_Fisica // self.M_pages): self.swapp_id = 0
         else: self.swapp_id+= n_pages
-        print(self.page_table)
-        
-
         
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
