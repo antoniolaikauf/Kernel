@@ -8,6 +8,7 @@ perche le grandezze delle pagine sono fisse
 
 Memoria Virtuale: è uno spazio che si trova sul disco rigido o SSD e viene usata quando lo spazio nella RAM viene esaurito 
 Paging: divide la memoria SSD e RAM in blocchi fissi chiamati FRAME in RAM e PAGINE nella SSD 
+virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
 '''
 
 class Memory: #allocazione memoria
@@ -17,33 +18,36 @@ class Memory: #allocazione memoria
         self.M_pages=int(4e3) #bits KB 
         self.page_table= None
         self.table_id=0
-        self.swapp_id=0
+        self.swich=True
+
 
     def PT(self): # page table 
          self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
          return self.page_table
 
     def allocate(self,process):
-        for x in range(len(process)):
-            pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) # frame for process
-            for y in range(self.table_id, self.table_id + pages_need): # allocate frames to process
-                self.page_table[y]['NameP'] = process[x]['name']
-            self.table_id += pages_need
-            if self.table_id > math.ceil(self.Memoria_Fisica / self.M_pages): # RAM finished 
+        no_memory = math.ceil(sum(map(lambda p :  p['memory_required'] ,process)) / self.M_pages)
+        if no_memory > math.ceil(self.Memoria_Virtuale / self.M_pages):
+            raise MemoryError('memory not ennough')
+        else:
+            for x in range(len(process)):
+                pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) # frame for process
+                for y in range(self.table_id, self.table_id + pages_need): # allocate frames to process
+                    self.page_table[y]['NameP'] = process[x]['name']
+                self.table_id += pages_need
+                if self.table_id > math.ceil(self.Memoria_Fisica / self.M_pages): # RAM finished 
+                   if self.swich: 
+                      Need_Memory=sum(map(lambda p: p['memory_required'],process[x:])) # necessary memory 
 
-                def M_required(n):
-                    return n['memory_required']
-                Need_Memory=sum(map(M_required,process[x:])) # necessary memory 
-
-                self.table_id =0
-                self.swapping(Need_Memory) # change from frame RAM to pages SSD
-                self.allocate(process[x:]) # allocate process 
-                break
-            
+                      self.table_id =0
+                      self.swapping(Need_Memory) # change from frame RAM to pages SSD
+                      self.allocate(process[x:]) # allocate process 
+                      break
+                   else: raise MemoryError('memory RAM not ennough')
+    
             
     def deallocate(self,process,memory):
-        # fare map
-        for x in self.page_table:
+        for x in self.page_table: 
             if x['NameP'] == process: x['NameP'] = None
         return math.floor(memory / self.M_pages) # tot frame liberati
     
@@ -59,8 +63,3 @@ class Memory: #allocazione memoria
             SSD_pages= x + (self.Memoria_Fisica // self.M_pages)
             self.page_table[SSD_pages]['NameP'] = self.page_table[x]['NameP']
             self.page_table[x]['NameP'] = None
-        
-
-# virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
-
-#  https://www2.cs.uregina.ca/~hamilton/courses/330/notes/memory/paging.html

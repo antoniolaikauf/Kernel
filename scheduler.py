@@ -148,22 +148,18 @@ class Shortest_Job_First(scheduler):
 
 # name, memory, burst time, arrival time 
 P=[process('ps1',1000000,5,1).__dict__,
-   process('ps2',1000000,4,2).__dict__,
+   process('ps2',1000,4,2).__dict__,
    process('ps3',1000000,2,3).__dict__,
    process('ps4',1000000,6,4).__dict__,
    process('ps5',1000000,5,6).__dict__,
    process('ps6',1000000,20,8).__dict__,
-
+#    process('ps7',1000000,17,9).__dict__,
+#    process('ps8',1000000,3,10).__dict__,
+#    process('ps9',1000000,8,11).__dict__,
+#    process('ps10',1000000,25,13).__dict__,
+#    process('ps11',1000000,3,14).__dict__,
+#    process('ps12',1000000,3,16).__dict__,
    ]
-
-'''
-   process('ps7',1000000,17,9).__dict__,
-   process('ps8',1000000,3,10).__dict__,
-   process('ps9',1000000,8,11).__dict__,
-   process('ps10',1000000,25,13).__dict__,
-   process('ps11',1000000,3,14).__dict__,
-   process('ps12',1000000,3,16).__dict__,
-'''
 
 maxSize=20
 S=scheduler(P,maxSize)
@@ -176,8 +172,8 @@ elif rr:
     M=Memory() # memory
     M.PT()
     M.allocate(P)
-    print(M.page_table)
+    # print(M.page_table)
 
-    # RR= round_robin(Q, maxSize, Quantum=3)
-    # print(RR.run(M)) # algoritmo
-    # RR.graph() #grafico 
+    RR= round_robin(Q, maxSize, Quantum=3)
+    print(RR.run(M)) # algoritmo
+    RR.graph() #grafico 
