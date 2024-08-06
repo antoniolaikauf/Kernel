@@ -1,5 +1,5 @@
 from termcolor import colored, cprint 
-import time
+
 import math
 
 '''
@@ -14,15 +14,7 @@ Third allocation = 100 ms but job1 self-terminates after 50 ms.
 Total CPU time of job1 = 250 ms
 
 Waiting time: Sum of time a process spent waiting in ready queue
-'''
 
-# class Kernel: #kernel
-#     def __init__(self, sheduler):
-#         self.memory= Memory(1024)
-#         self.scheduler=sheduler
-    #     def run(self):
-#         print(self.memory.allocate(200))
-'''
 quando un processo viene creato viene creato nella RAM e ad ogni pagina viene data un fraim nella SSD (fino a quando la sua memoria non finisce) e all'interno di questi fraim c'è la pagina 
 processo occupa 200bytes di memoria quindi neanche un KB di memoria verra allocata semplicemnete in una pagina, ma se supera la quantita di memoria
 di una pagina allora il rimanente verra allocata li e se non occupa interamnete quella pagina allora quella pagina avrà dello spazio free (questo viene chiamato internal fragmentation)
@@ -36,21 +28,22 @@ Quando un processo accede a un indirizzo di memoria virtuale, il sistema operati
 
 class Memory: #allocazione memoria
     def __init__(self):
-        self.Memoria_Virtuale= int(8e6)  # MB SSD phisical memory 
-        self.Memoria_Fisica= int(4e6) # MB RAM logical memory 
+        self.Memoria_Virtuale= int(8e6)  # MB SSD 
+        self.Memoria_Fisica= int(4e6) # MB RAM 
         self.M_pages=int(4e3) #bits KB 
         self.page_table= None
         self.table_id=0
 
-    def PT(self):
-        self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None }  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
+    def PT(self): # page table 
+        self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
 
 
     def allocate(self,memory,process):
-        while memory >= 0 :
-            self.table_id+=1
-            print(self.table_id)
-            memory-= self.M_pages
+        pages_need=math.ceil(memory / self.M_pages) #frame for process 
+        for x in range(self.table_id, self.table_id + pages_need):
+            if self.page_table[x]['frame RAM'] != None:self.page_table[x]['NameP'] = 'ps'+ str(process) #allocate physical memory (frame) to process
+            else: raise MemoryError('non abbastanza memoria')
+        self.table_id += pages_need #sum for id table 
 
         # in pages x dovrebbe esserci la rappresentazione di bits es 00000001 fino ad arrivare 11111111 
         # ogni pages ha vari address (offset) 
@@ -66,10 +59,10 @@ class Memory: #allocazione memoria
 
 M=Memory()
 M.PT()
-for x in range(1):
-   M.allocate(3e3,x)
+for x in range(4):
+   M.allocate(1000000,x)
 
-# print(M.page_table)
+print(M.page_table)
 
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
