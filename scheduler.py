@@ -13,7 +13,8 @@ rr=False
 if len(sys.argv) > 2: raise Exception('add more than two parapeters')
 if sys.argv[1].upper() == 'SJF': sjf=True
 elif sys.argv[1].upper() == 'RR': rr= True
-class process:
+
+class process: 
     def __init__(self, name, memory_required, Burst_Time, arrival_time):
         self.name=name
         self.memory_required=memory_required
@@ -158,7 +159,6 @@ P=[process('ps1',1000000,5,1).__dict__,
    process('ps10',1000000,25,13).__dict__,
    process('ps11',1000000,3,14).__dict__,
    process('ps12',1000000,3,16).__dict__,
-
 '''
 
 maxSize=20
@@ -176,4 +176,4 @@ elif rr:
     print(M.page_table)
     RR= round_robin(Q, maxSize, Quantum=6)
     print(RR.run()) # algoritmo
-    # RR.graph() #grafico 
+    RR.graph() #grafico 
