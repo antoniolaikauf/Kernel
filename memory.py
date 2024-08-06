@@ -1,8 +1,6 @@
 from termcolor import colored, cprint 
 import time
 
-
-
 '''
 For example, if the time slot is 100 milliseconds, and job1 takes a total time of 250 ms to complete, the round-robin scheduler will suspend the job after 100 ms and give other jobs their time on the CPU.
 Once the other jobs have had their equal share (100 ms each), job1 will get another allocation of CPU time and the cycle will repeat
@@ -37,9 +35,9 @@ Quando un processo accede a un indirizzo di memoria virtuale, il sistema operati
 
 class Memory: #allocazione memoria
     def __init__(self):
-        self.Memoria_Virtuale= 32 # KB SSD phisical memory 
-        self.Memoria_Fisica= 16 # KB RAM logical memory 
-        self.M_pages=4
+        self.Memoria_Virtuale= int(8e6)  # MB SSD phisical memory 
+        self.Memoria_Fisica= int(4e6) # MB RAM logical memory 
+        self.M_pages=int(4e3) #bits KB 
         self.page_table= None
         self.used_memory=0
 
@@ -49,8 +47,8 @@ class Memory: #allocazione memoria
         self.page_table=[{'pages SSD':x, 'frame RAM': None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
         for x in range(self.Memoria_Fisica // self.M_pages):
             memory -= self.M_pages
-            if memory >= 0 : self.page_table[x]['frame RAM'] = x
-            else :break
+            self.page_table[x]['frame RAM'] = x
+            if memory <= 0: break
 
         print(self.page_table)
         # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
@@ -58,8 +56,10 @@ class Memory: #allocazione memoria
 
 
 M=Memory()
-M.allocate(20)
+M.allocate(5e3)
 
+
+# virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
 
 '''
 In a paging memory management system, the virtual address space is divided into fixed-size blocks called pages, which are mapped to physical memory frames. The virtual address consists of two parts: the page number and the offset within the page.
