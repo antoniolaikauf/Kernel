@@ -1,5 +1,4 @@
 from termcolor import colored, cprint 
-
 import math
 
 '''
@@ -28,29 +27,26 @@ Quando un processo accede a un indirizzo di memoria virtuale, il sistema operati
 
 class Memory: #allocazione memoria
     def __init__(self):
-        self.Memoria_Virtuale= int(8e6)  # MB SSD 
-        self.Memoria_Fisica= int(4e6) # MB RAM 
+        self.Memoria_Virtuale= int(8e6)  # MB SSD page 
+        self.Memoria_Fisica= int(4e6) # MB RAM frame 
         self.M_pages=int(4e3) #bits KB 
         self.page_table= None
         self.table_id=0
 
     def PT(self): # page table 
-        self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
+         self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
+         return self.page_table
 
 
     def allocate(self,memory,process):
         pages_need=math.ceil(memory / self.M_pages) #frame for process 
         for x in range(self.table_id, self.table_id + pages_need):
-            if self.page_table[x]['frame RAM'] != None:self.page_table[x]['NameP'] = 'ps'+ str(process) #allocate physical memory (frame) to process
+            if self.page_table[x]['frame RAM'] != None:self.page_table[x]['NameP'] =  process #allocate physical memory (frame) to process
             else: raise MemoryError('non abbastanza memoria')
         self.table_id += pages_need #sum for id table 
 
         # in pages x dovrebbe esserci la rappresentazione di bits es 00000001 fino ad arrivare 11111111 
         # ogni pages ha vari address (offset) 
-        # for x in range(math.floor(memory / self.M_pages) + 1):
-        #     if self.page_table[x]['frame RAM'] != None:
-        #         self.page_table[x]['frame RAM'] = str(x) + 'name' + str(process)
-        #     else: raise MemoryError('non abbastanza memoria ')
 
         # return self.page_table
         # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
@@ -62,7 +58,7 @@ M.PT()
 for x in range(4):
    M.allocate(1000000,x)
 
-print(M.page_table)
+# print(M.page_table)
 
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).

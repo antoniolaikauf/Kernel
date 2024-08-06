@@ -14,7 +14,7 @@ if len(sys.argv) > 2: raise Exception('add more than two parapeters')
 if sys.argv[1].upper() == 'SJF': sjf=True
 elif sys.argv[1].upper() == 'RR': rr= True
 class process:
-    def __init__(self, name, memory_required, Burst_Time, arrival_time): 
+    def __init__(self, name, memory_required, Burst_Time, arrival_time):
         self.name=name
         self.memory_required=memory_required
         self.Burst_Time=Burst_Time
@@ -70,19 +70,19 @@ class round_robin(scheduler):
         self.complete_process=[]
         self.Completion_time = 0 # how much time you need for every process to be compleated 
         self.T_process={}
-    
+            
     def run(self):
-        
         while self.n_process != []:
+            # Completion_time 
             if self.n_process[0]['remaining_time'] < self.Quantum: self.Completion_time+=self.n_process[0]['remaining_time']
             else: self.Completion_time+=self.Quantum
-
             self.T_process[self.n_process[0]['name']] = {'Completion_time':self.Completion_time}
 
-            time.sleep(self.Quantum)
-            self.G.append({'name':self.n_process[0]['name'], 'time':self.n_process[0]['remaining_time']})
-            self.n_process[0]['remaining_time'] -= self.Quantum
+            self.G.append({'name':self.n_process[0]['name'], 'time':self.n_process[0]['remaining_time']}) # for graph 
 
+            time.sleep(self.Quantum)
+            # burst time - quantum 
+            self.n_process[0]['remaining_time'] -= self.Quantum
             if self.n_process[0]['remaining_time'] <= 0: #remove process from queue 
                self.n_process[0]['remaining_time']=0
                print(f"process finished:{colored(self.n_process[0]['name'],'red')}")
@@ -92,13 +92,14 @@ class round_robin(scheduler):
                 print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [self.n_process[0]]
 
-        for T in self.complete_process:  
+        for T in self.complete_process:  # formula for Time_Turnaround and waiting time 
             self.T_process[T['name']]['Time_Turnaround'] = self.T_process[T['name']]['Completion_time'] -  T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
             self.T_process[T['name']]['Waitng_time'] = self.T_process[T['name']]['Time_Turnaround'] - T['Burst_Time'] #This is the time a process spends waiting in the queue # formula Waitng_time = Time_Turnaround - Burst_Time
         
         # average time of the scheduler 
         Average_Wait_time=sum(self.T_process[x]['Waitng_time'] for x in self.T_process) / len(self.T_process)
-        print(f"Average Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
+        print(f"Average Waiting Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
+
         return self.complete_process
     
     def graph(self): #Gantt chart
@@ -143,26 +144,22 @@ class Shortest_Job_First(scheduler):
         plt.show()
 
 # name, memory, burst time, arrival time 
-P=[process('ps1',256,5,1).__dict__,
-   process('ps2',256,4,2).__dict__,
-   process('ps3',256,2,3).__dict__,]
+P=[process('ps1',1000000,5,1).__dict__,
+   process('ps2',1000000,4,2).__dict__,
+   process('ps3',1000000,2,3).__dict__,
+   process('ps4',1000000,6,4).__dict__,]
 
 '''
-   process('ps4',256,6,4).__dict__,
-   process('ps5',256,5,6).__dict__,
-   process('ps6',256,20,8).__dict__,
-   process('ps7',256,17,9).__dict__,
-   process('ps8',256,3,10).__dict__,
-   process('ps9',256,8,11).__dict__,
-   process('ps10',256,25,13).__dict__,
-   process('ps11',256,3,14).__dict__,
-   process('ps12',256,3,16).__dict__,
-'''
+   process('ps5',1000000,5,6).__dict__,
+   process('ps6',1000000,20,8).__dict__,
+   process('ps7',1000000,17,9).__dict__,
+   process('ps8',1000000,3,10).__dict__,
+   process('ps9',1000000,8,11).__dict__,
+   process('ps10',1000000,25,13).__dict__,
+   process('ps11',1000000,3,14).__dict__,
+   process('ps12',1000000,3,16).__dict__,
 
-# M=Memory(8192) # simulazione di 1 KB RAM 
-# for x in P:
-#     x.run(10)
-#     M.allocate(x.memory_required)
+'''
 
 maxSize=20
 S=scheduler(P,maxSize)
@@ -172,6 +169,11 @@ if sjf:
     print(SJF.run())
     SJF.graph()
 elif rr:
-    RR= round_robin(Q, maxSize, Quantum=2)
-    print(RR.run())
-    RR.graph()
+    M=Memory() # memory
+    M.PT()
+    for x in P:
+        M.allocate(x['memory_required'],x['name'])
+    print(M.page_table)
+    RR= round_robin(Q, maxSize, Quantum=6)
+    print(RR.run()) # algoritmo
+    # RR.graph() #grafico 
