@@ -1,4 +1,5 @@
 import math
+from termcolor import colored
 '''
 quando un processo viene creato viene creato nella RAM e ad ogni pagina viene data un fraim nella SSD (fino a quando la sua memoria non finisce) e all'interno di questi fraim c'è la pagina 
 processo occupa 200bytes di memoria quindi neanche un KB di memoria verra allocata semplicemnete in una pagina, ma se supera la quantita di memoria
@@ -21,13 +22,18 @@ class Memory: #allocazione memoria
          self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
          return self.page_table
 
-
     def allocate(self,memory,process):
         pages_need=math.ceil(memory / self.M_pages) #frame for process 
         for x in range(self.table_id, self.table_id + pages_need):
             if self.page_table[x]['frame RAM'] != None:self.page_table[x]['NameP'] =  process #allocate physical memory (frame) to process
             else: raise MemoryError('non abbastanza memoria')
         self.table_id += pages_need #sum for id table 
+    
+    def deallocate(self,process,memory):
+        for x in self.page_table:
+            if x['NameP'] == process: x['NameP'] = None
+        return math.floor(memory / self.M_pages) # tot frame liberati
+        
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
 

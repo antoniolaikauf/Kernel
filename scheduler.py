@@ -72,7 +72,7 @@ class round_robin(scheduler):
         self.Completion_time = 0 # how much time you need for every process to be compleated 
         self.T_process={}
             
-    def run(self):
+    def run(self,memory):
         while self.n_process != []:
             # Completion_time 
             if self.n_process[0]['remaining_time'] < self.Quantum: self.Completion_time+=self.n_process[0]['remaining_time']
@@ -84,9 +84,10 @@ class round_robin(scheduler):
             time.sleep(self.Quantum)
             # burst time - quantum 
             self.n_process[0]['remaining_time'] -= self.Quantum
-            if self.n_process[0]['remaining_time'] <= 0: #remove process from queue 
+            if self.n_process[0]['remaining_time'] <= 0: #remove process from queue
+               free_memory= memory.deallocate(self.n_process[0]['name'], self.n_process[0]['memory_required'])
                self.n_process[0]['remaining_time']=0
-               print(f"process finished:{colored(self.n_process[0]['name'],'red')}")
+               print(f"process finished:{colored(self.n_process[0]['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
                self.complete_process.append(self.n_process[0])
                self.n_process.pop(0)
             else: # put porcces at the end of the queue
@@ -173,7 +174,7 @@ elif rr:
     M.PT()
     for x in P:
         M.allocate(x['memory_required'],x['name'])
+    RR= round_robin(Q, maxSize, Quantum=3)
+    print(RR.run(M)) # algoritmo
     print(M.page_table)
-    RR= round_robin(Q, maxSize, Quantum=6)
-    print(RR.run()) # algoritmo
-    RR.graph() #grafico 
+    # RR.graph() #grafico 
