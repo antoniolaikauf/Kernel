@@ -23,17 +23,19 @@ class Memory: #allocazione memoria
          self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
          return self.page_table
 
-    def allocate(self,memory,process):
-        pages_need=math.ceil(memory / self.M_pages) #frame for process 
-        for x in range(self.table_id, self.table_id + pages_need):
-            if self.page_table[x]['frame RAM'] != None:self.page_table[x]['NameP'] =  process #allocate physical memory (frame) to process
+    def allocate(self,process):
+        for x in range(len(process)):
+            pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) #frame for process
+            for y in range(self.table_id, self.table_id + pages_need):
+                self.page_table[y]['NameP'] = process[x]['name']
+            if self.table_id < math.ceil(self.Memoria_Fisica / self.M_pages):
+                self.table_id += pages_need
             else:
                 self.swapping(memory)
-                break
-                # raise MemoryError('non abbastanza memoria')
-        self.table_id += pages_need #sum for id table 
-    
+                raise MemoryError('non abbastanza memoria')
+
     def deallocate(self,process,memory):
+        # fare map
         for x in self.page_table:
             if x['NameP'] == process: x['NameP'] = None
         return math.floor(memory / self.M_pages) # tot frame liberati
