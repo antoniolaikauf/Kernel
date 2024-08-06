@@ -33,6 +33,19 @@ class Memory: #allocazione memoria
         for x in self.page_table:
             if x['NameP'] == process: x['NameP'] = None
         return math.floor(memory / self.M_pages) # tot frame liberati
+    
+    def swapping(self, space_memory):
+        '''
+        Lo swap viene utilizzato per liberare memoria RAM: il sistema operativo ne salva sul disco una porzione della memoria allocata,
+          che quindi può essere liberata e riallocata per i programmi che ne hanno bisogno. Questa porzione contiene
+          i dati che hanno minore probabilità di essere richiesti nel futuro, e in genere sono quelli meno recentemente utilizzati.
+        '''
+        n_pages=  space_memory // self.M_pages
+        # def myfunc(n):
+        #    return len(n)
+
+        # x = map(myfunc, ('apple', 'banana', 'cherry'))
+        # print(list(x))
         
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).

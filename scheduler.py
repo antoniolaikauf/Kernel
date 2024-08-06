@@ -65,7 +65,7 @@ class scheduler: # gestione processi
 
 class round_robin(scheduler):
     def __init__(self, n_process, maxSize=2, Quantum=5):
-        super().__init__(n_process, maxSize)
+        super().__init__(n_process, maxSize)  #attributi passati in scheduler
         self.Quantum=Quantum
         self.G=[] #G =graph
         self.complete_process=[]
@@ -74,25 +74,26 @@ class round_robin(scheduler):
             
     def run(self,memory):
         while self.n_process != []:
+            process=self.n_process[0]
             # Completion_time 
-            if self.n_process[0]['remaining_time'] < self.Quantum: self.Completion_time+=self.n_process[0]['remaining_time']
+            if process['remaining_time'] < self.Quantum: self.Completion_time+=process['remaining_time']
             else: self.Completion_time+=self.Quantum
-            self.T_process[self.n_process[0]['name']] = {'Completion_time':self.Completion_time}
+            self.T_process[process['name']] = {'Completion_time':self.Completion_time}
 
-            self.G.append({'name':self.n_process[0]['name'], 'time':self.n_process[0]['remaining_time']}) # for graph 
+            self.G.append({'name':process['name'], 'time':process['remaining_time']}) # for graph 
 
             time.sleep(self.Quantum)
             # burst time - quantum 
-            self.n_process[0]['remaining_time'] -= self.Quantum
-            if self.n_process[0]['remaining_time'] <= 0: #remove process from queue
-               free_memory= memory.deallocate(self.n_process[0]['name'], self.n_process[0]['memory_required'])
-               self.n_process[0]['remaining_time']=0
-               print(f"process finished:{colored(self.n_process[0]['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
-               self.complete_process.append(self.n_process[0])
+            process['remaining_time'] -= self.Quantum
+            if process['remaining_time'] <= 0: #remove process from queue
+               free_memory= memory.deallocate(process['name'], process['memory_required'])
+               process['remaining_time']=0
+               print(f"process finished:{colored(process['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
+               self.complete_process.append(process)
                self.n_process.pop(0)
             else: # put porcces at the end of the queue
-                print(f"not finished: {colored(self.n_process[0]['name'],'red')}   time left: {colored(self.n_process[0]['remaining_time'],'blue')}s ")
-                self.n_process= self.n_process[1:] + [self.n_process[0]]
+                print(f"not finished: {colored(process['name'],'red')}   time left: {colored(process['remaining_time'],'blue')}s ")
+                self.n_process= self.n_process[1:] + [process]
 
         for T in self.complete_process:  # formula for Time_Turnaround and waiting time 
             self.T_process[T['name']]['Time_Turnaround'] = self.T_process[T['name']]['Completion_time'] -  T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
@@ -122,7 +123,7 @@ Shortest Job First chi ha il Burst_Time piu basso ha una priorità più alta
 '''
 class Shortest_Job_First(scheduler):
     def __init__(self, n_process, maxSize=2):
-        super().__init__(n_process, maxSize)
+        super().__init__(n_process, maxSize) #attributi passati in scheduler
     
     def run(self): 
         L=len(self.n_process) - 1 
@@ -172,6 +173,8 @@ if sjf:
 elif rr:
     M=Memory() # memory
     M.PT()
+    M.swapping(1000000)
+    exit(0)
     for x in P:
         M.allocate(x['memory_required'],x['name'])
     RR= round_robin(Q, maxSize, Quantum=3)
