@@ -151,7 +151,7 @@ P=[process('ps1',1000000,5,1).__dict__,
    process('ps2',1000000,4,2).__dict__,
    process('ps3',1000000,2,3).__dict__,
    process('ps4',1000000,6,4).__dict__,
-#    process('ps5',1000000,5,6).__dict__,
+   process('ps5',1000000,5,6).__dict__,
 
    ]
 
@@ -175,8 +175,6 @@ if sjf:
 elif rr:
     M=Memory() # memory
     M.PT()
-    # for x in P:
-    #     M.allocate(x['memory_required'],x['name'])
     M.allocate(P)
     print(M.page_table)
 

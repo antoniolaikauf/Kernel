@@ -31,7 +31,7 @@ class Memory: #allocazione memoria
             if self.table_id < math.ceil(self.Memoria_Fisica / self.M_pages):
                 self.table_id += pages_need
             else:
-                self.swapping(memory)
+                self.swapping(process[x]['memory_required'])
                 raise MemoryError('non abbastanza memoria')
 
     def deallocate(self,process,memory):
@@ -53,6 +53,7 @@ class Memory: #allocazione memoria
             self.page_table[x]['NameP'] = None
         if self.swapp_id > (self.Memoria_Fisica // self.M_pages): self.swapp_id = 0
         else: self.swapp_id+= n_pages
+        print(self.page_table)
         
 
         
