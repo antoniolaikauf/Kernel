@@ -86,9 +86,9 @@ class round_robin(scheduler):
             # burst time - quantum 
             process['remaining_time'] -= self.Quantum
             if process['remaining_time'] <= 0: #remove process from queue
-               free_memory= memory.deallocate(process['name'], process['memory_required'])
+            #    free_memory= memory.deallocate(process['name'], process['memory_required']) # free memory
                process['remaining_time']=0
-               print(f"process finished:{colored(process['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
+            #    print(f"process finished:{colored(process['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
                self.complete_process.append(process)
                self.n_process.pop(0)
             else: # put porcces at the end of the queue
@@ -150,10 +150,10 @@ class Shortest_Job_First(scheduler):
 P=[process('ps1',1000000,5,1).__dict__,
    process('ps2',1000000,4,2).__dict__,
    process('ps3',1000000,2,3).__dict__,
-   process('ps4',1000000,6,4).__dict__,]
+   process('ps4',1000000,6,4).__dict__,
+   process('ps5',1000000,5,6).__dict__,]
 
 '''
-   process('ps5',1000000,5,6).__dict__,
    process('ps6',1000000,20,8).__dict__,
    process('ps7',1000000,17,9).__dict__,
    process('ps8',1000000,3,10).__dict__,
@@ -173,11 +173,9 @@ if sjf:
 elif rr:
     M=Memory() # memory
     M.PT()
-    M.swapping(1000000)
-    exit(0)
     for x in P:
         M.allocate(x['memory_required'],x['name'])
-    RR= round_robin(Q, maxSize, Quantum=3)
-    print(RR.run(M)) # algoritmo
     print(M.page_table)
+    # RR= round_robin(Q, maxSize, Quantum=3)
+    # print(RR.run(M)) # algoritmo
     # RR.graph() #grafico 

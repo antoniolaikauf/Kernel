@@ -17,6 +17,7 @@ class Memory: #allocazione memoria
         self.M_pages=int(4e3) #bits KB 
         self.page_table= None
         self.table_id=0
+        self.swapp_id=0
 
     def PT(self): # page table 
          self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
@@ -26,7 +27,10 @@ class Memory: #allocazione memoria
         pages_need=math.ceil(memory / self.M_pages) #frame for process 
         for x in range(self.table_id, self.table_id + pages_need):
             if self.page_table[x]['frame RAM'] != None:self.page_table[x]['NameP'] =  process #allocate physical memory (frame) to process
-            else: raise MemoryError('non abbastanza memoria')
+            else:
+                self.swapping(memory)
+                break
+                # raise MemoryError('non abbastanza memoria')
         self.table_id += pages_need #sum for id table 
     
     def deallocate(self,process,memory):
@@ -37,15 +41,18 @@ class Memory: #allocazione memoria
     def swapping(self, space_memory):
         '''
         Lo swap viene utilizzato per liberare memoria RAM: il sistema operativo ne salva sul disco una porzione della memoria allocata,
-          che quindi può essere liberata e riallocata per i programmi che ne hanno bisogno. Questa porzione contiene
-          i dati che hanno minore probabilità di essere richiesti nel futuro, e in genere sono quelli meno recentemente utilizzati.
+        che quindi può essere liberata e riallocata per i programmi che ne hanno bisogno. Questa porzione contiene
+        i dati che hanno minore probabilità di essere richiesti nel futuro, e in genere sono quelli meno recentemente utilizzati.
         '''
         n_pages=  space_memory // self.M_pages
-        # def myfunc(n):
-        #    return len(n)
+        for x in range(self.swapp_id, self.swapp_id + n_pages):
+            SSD_pages= x + (self.Memoria_Fisica // self.M_pages)
+            self.page_table[SSD_pages]['NameP'] = self.page_table[x]['NameP']
+            self.page_table[x]['NameP'] = None
+        if self.swapp_id > (self.Memoria_Fisica // self.M_pages): self.swapp_id = 0
+        else: self.swapp_id+= n_pages
+        
 
-        # x = map(myfunc, ('apple', 'banana', 'cherry'))
-        # print(list(x))
         
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
