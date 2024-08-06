@@ -1,5 +1,6 @@
 from termcolor import colored, cprint 
 import time
+import math
 
 '''
 For example, if the time slot is 100 milliseconds, and job1 takes a total time of 250 ms to complete, the round-robin scheduler will suspend the job after 100 ms and give other jobs their time on the CPU.
@@ -39,24 +40,36 @@ class Memory: #allocazione memoria
         self.Memoria_Fisica= int(4e6) # MB RAM logical memory 
         self.M_pages=int(4e3) #bits KB 
         self.page_table= None
-        self.used_memory=0
+        self.table_id=0
 
-    def allocate(self,memory):
+    def PT(self):
+        self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None }  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
+
+
+    def allocate(self,memory,process):
+        while memory >= 0 :
+            self.table_id+=1
+            print(self.table_id)
+            memory-= self.M_pages
+
         # in pages x dovrebbe esserci la rappresentazione di bits es 00000001 fino ad arrivare 11111111 
         # ogni pages ha vari address (offset) 
-        self.page_table=[{'pages SSD':x, 'frame RAM': None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ] #map of memory
-        for x in range(self.Memoria_Fisica // self.M_pages):
-            memory -= self.M_pages
-            self.page_table[x]['frame RAM'] = x
-            if memory <= 0: break
+        # for x in range(math.floor(memory / self.M_pages) + 1):
+        #     if self.page_table[x]['frame RAM'] != None:
+        #         self.page_table[x]['frame RAM'] = str(x) + 'name' + str(process)
+        #     else: raise MemoryError('non abbastanza memoria ')
 
-        print(self.page_table)
+        # return self.page_table
         # if self.used_memory <= self.memory: cprint(f'memoria allocata {memory} memoria disponibile {self.memory - (self.used_memory)}', "cyan")
         # else: raise Exception(f'memoria allocata {self.used_memory} supera {memory}')
 
 
 M=Memory()
-M.allocate(5e3)
+M.PT()
+for x in range(1):
+   M.allocate(3e3,x)
+
+# print(M.page_table)
 
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
