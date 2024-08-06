@@ -176,7 +176,7 @@ elif rr:
     M=Memory() # memory
     M.PT()
     M.allocate(P)
-    # print(M.page_table)
+    print(M.page_table)
 
     # RR= round_robin(Q, maxSize, Quantum=3)
     # print(RR.run(M)) # algoritmo

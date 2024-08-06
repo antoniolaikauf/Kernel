@@ -25,19 +25,19 @@ class Memory: #allocazione memoria
 
     def allocate(self,process):
         for x in range(len(process)):
-            pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) #frame for process
-            for y in range(self.table_id, self.table_id + pages_need):
+            pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) # frame for process
+            for y in range(self.table_id, self.table_id + pages_need): # allocate frames to process
                 self.page_table[y]['NameP'] = process[x]['name']
             self.table_id += pages_need
-            if self.table_id > math.ceil(self.Memoria_Fisica / self.M_pages):
-                self.table_id =0
+            if self.table_id > math.ceil(self.Memoria_Fisica / self.M_pages): # RAM finished 
 
                 def M_required(n):
                     return n['memory_required']
-                Need_Memory=sum(map(M_required,process[x:]))
+                Need_Memory=sum(map(M_required,process[x:])) # necessary memory 
 
-                self.swapping(Need_Memory)
-                self.allocate(process[x:])
+                self.table_id =0
+                self.swapping(Need_Memory) # change from frame RAM to pages SSD
+                self.allocate(process[x:]) # allocate process 
                 break
             
             
@@ -54,13 +54,11 @@ class Memory: #allocazione memoria
         i dati che hanno minore probabilità di essere richiesti nel futuro, e in genere sono quelli meno recentemente utilizzati.
         '''
         n_pages=  space_memory // self.M_pages # necessary pages 
-        print(n_pages)
-        for x in range(self.swapp_id, self.swapp_id + n_pages):
+
+        for x in range(n_pages):
             SSD_pages= x + (self.Memoria_Fisica // self.M_pages)
             self.page_table[SSD_pages]['NameP'] = self.page_table[x]['NameP']
             self.page_table[x]['NameP'] = None
-        if self.swapp_id > (self.Memoria_Fisica // self.M_pages): self.swapp_id = 0
-        else: self.swapp_id+= n_pages
         
 
 # virtual_address generato dalla cpu composto da Virtual page number (20 bits) and page offset (12 bits).
