@@ -20,20 +20,20 @@ class Memory: #allocazione memoria
         self.table_id=0
         self.swich=True
 
-
     def PT(self): # page table 
          self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
+         print(self.page_table)
          return self.page_table
 
     def allocate(self,process):
-        no_memory = math.ceil(sum(map(lambda p :  p['memory_required'] ,process)) / self.M_pages)
+        no_memory = math.ceil(sum(map(lambda p :  p['memory_required'] ,process)) / self.M_pages) #memory reqired 
         if no_memory > math.ceil(self.Memoria_Virtuale / self.M_pages):
             raise MemoryError('memory not ennough')
         else:
             for x in range(len(process)):
                 pages_need=math.ceil(process[x]['memory_required'] / self.M_pages) # frame for process
-                for y in range(self.table_id, self.table_id + pages_need): # allocate frames to process
-                    self.page_table[y]['NameP'] = process[x]['name']
+                for y in range(self.table_id, self.table_id +  pages_need): # allocate frames to process 
+                     self.page_table[y]['NameP'] = process[x]['name']
                 self.table_id += pages_need
                 if self.table_id > math.ceil(self.Memoria_Fisica / self.M_pages): # RAM finished 
                    if self.swich: 
@@ -43,8 +43,7 @@ class Memory: #allocazione memoria
                       self.swapping(Need_Memory) # change from frame RAM to pages SSD
                       self.allocate(process[x:]) # allocate process 
                       break
-                   else: raise MemoryError('memory RAM not ennough')
-    
+                   else: raise MemoryError('memory RAM not ennough')  
             
     def deallocate(self,process,memory):
         for x in self.page_table: 
@@ -60,6 +59,7 @@ class Memory: #allocazione memoria
         n_pages=  space_memory // self.M_pages # necessary pages 
 
         for x in range(n_pages):
-            SSD_pages= x + (self.Memoria_Fisica // self.M_pages)
+            print(x)
+            SSD_pages= x + (self.Memoria_Fisica // self.M_pages) # we are looking in ssd part 
             self.page_table[SSD_pages]['NameP'] = self.page_table[x]['NameP']
             self.page_table[x]['NameP'] = None

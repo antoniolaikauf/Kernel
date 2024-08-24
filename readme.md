@@ -70,3 +70,5 @@ there are four categories of kernel
 
 - https://medium.com/@francescofranco_39234/round-robin-scheduling-algorithm-8d65128d96db
 
+- https://stackoverflow.com/questions/15628671/page-number-and-offset 
+

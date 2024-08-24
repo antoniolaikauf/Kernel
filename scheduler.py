@@ -11,8 +11,8 @@ Burst_Time would be the time that the proccess need to be executes call BURST TI
 sjf=False
 rr=False
 if len(sys.argv) > 2: raise Exception('add more than two parapeters')
-if sys.argv[1].upper() == 'SJF': sjf=True
-elif sys.argv[1].upper() == 'RR': rr= True
+if sys.argv[-1].upper() == 'SJF': sjf=True
+elif sys.argv[-1].upper() == 'RR': rr= True
 
 class process: 
     def __init__(self, name, memory_required, Burst_Time, arrival_time):
