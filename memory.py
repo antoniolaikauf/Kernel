@@ -22,7 +22,7 @@ class Memory: #allocazione memoria
 
     def PT(self): # page table 
          self.page_table=[{'pages SSD':x, 'frame RAM': x if x < self.Memoria_Fisica / self.M_pages else None ,'NameP':None}  for x in range(int(self.Memoria_Virtuale / self.M_pages)) ]
-         print(self.page_table)
+        #  print(self.page_table)
          return self.page_table
 
     def allocate(self,process):
@@ -59,7 +59,6 @@ class Memory: #allocazione memoria
         n_pages=  space_memory // self.M_pages # necessary pages 
 
         for x in range(n_pages):
-            print(x)
             SSD_pages= x + (self.Memoria_Fisica // self.M_pages) # we are looking in ssd part 
             self.page_table[SSD_pages]['NameP'] = self.page_table[x]['NameP']
             self.page_table[x]['NameP'] = None

@@ -21,6 +21,8 @@ class process:
         self.Burst_Time=Burst_Time
         self.remaining_time=Burst_Time
         self.arrival_time=arrival_time
+        self.Completion_time=0
+        self.Time_Turnaround=0
         self.waiting_time=0
 
 class scheduler: # gestione processi
@@ -64,7 +66,7 @@ class scheduler: # gestione processi
 '''
 
 class round_robin(scheduler):
-    def __init__(self, n_process, maxSize=2, Quantum=5):
+    def __init__(self, n_process, maxSize=2, Quantum=7):
         super().__init__(n_process, maxSize)  #attributi passati in scheduler
         self.Quantum=Quantum
         self.G=[] #G =graph
@@ -78,10 +80,8 @@ class round_robin(scheduler):
             # Completion_time 
             if process['remaining_time'] < self.Quantum: self.Completion_time+=process['remaining_time']
             else: self.Completion_time+=self.Quantum
-            self.T_process[process['name']] = {'Completion_time':self.Completion_time}
-
+            # self.T_process[process['name']] = {'Completion_time':self.Completion_time}
             self.G.append({'name':process['name'], 'time':process['remaining_time']}) # for graph 
-
             time.sleep(self.Quantum)
             # burst time - quantum 
             process['remaining_time'] -= self.Quantum
@@ -89,19 +89,21 @@ class round_robin(scheduler):
             #    free_memory= memory.deallocate(process['name'], process['memory_required']) # free memory
                process['remaining_time']=0
             #    print(f"process finished:{colored(process['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
+               process['Completion_time'] = self.Completion_time
                self.complete_process.append(process)
                self.n_process.pop(0)
             else: # put porcces at the end of the queue
                 print(f"not finished: {colored(process['name'],'red')}   time left: {colored(process['remaining_time'],'blue')}s ")
                 self.n_process= self.n_process[1:] + [process]
-
+        
         for T in self.complete_process:  # formula for Time_Turnaround and waiting time 
-            self.T_process[T['name']]['Time_Turnaround'] = self.T_process[T['name']]['Completion_time'] -  T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
-            self.T_process[T['name']]['Waitng_time'] = self.T_process[T['name']]['Time_Turnaround'] - T['Burst_Time'] #This is the time a process spends waiting in the queue # formula Waitng_time = Time_Turnaround - Burst_Time
+            # print(T['Completion_time'])
+            T['Time_Turnaround'] = T['Completion_time'] - T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
+            T['waiting_time'] = T['Time_Turnaround'] - T['Burst_Time'] #This is the time a process spends waiting in the queue # formula Waitng_time = Time_Turnaround - Burst_Time
         
         # average time of the scheduler 
-        Average_Wait_time=sum(self.T_process[x]['Waitng_time'] for x in self.T_process) / len(self.T_process)
-        print(f"Average Waiting Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
+        # Average_Wait_time=sum(self.T_process[x]['Waitng_time'] for x in self.T_process) / len(self.T_process)
+        # print(f"Average Waiting Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
 
         return self.complete_process
     
@@ -150,9 +152,9 @@ class Shortest_Job_First(scheduler):
 P=[process('ps1',1000000,5,1).__dict__,
    process('ps2',1000,4,2).__dict__,
    process('ps3',1000000,2,3).__dict__,
-   process('ps4',1000000,6,4).__dict__,
-   process('ps5',1000000,5,6).__dict__,
-   process('ps6',1000000,20,8).__dict__,
+#    process('ps4',1000000,6,4).__dict__,
+#    process('ps5',1000000,5,6).__dict__,
+#    process('ps6',1000000,20,8).__dict__,
 #    process('ps7',1000000,17,9).__dict__,
 #    process('ps8',1000000,3,10).__dict__,
 #    process('ps9',1000000,8,11).__dict__,
@@ -174,6 +176,6 @@ elif rr:
     M.allocate(P)
     # print(M.page_table)
 
-    RR= round_robin(Q, maxSize, Quantum=3)
+    RR= round_robin(Q, maxSize, Quantum=6)
     print(RR.run(M)) # algoritmo
-    RR.graph() #grafico 
+    # RR.graph() #grafico 
