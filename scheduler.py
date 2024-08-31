@@ -72,7 +72,6 @@ class round_robin(scheduler):
         self.G=[] #G =graph
         self.complete_process=[]
         self.Completion_time = 0 # how much time you need for every process to be compleated 
-        self.T_process={}
             
     def run(self,memory):
         while self.n_process != []:
@@ -80,15 +79,14 @@ class round_robin(scheduler):
             # Completion_time 
             if process['remaining_time'] < self.Quantum: self.Completion_time+=process['remaining_time']
             else: self.Completion_time+=self.Quantum
-            # self.T_process[process['name']] = {'Completion_time':self.Completion_time}
             self.G.append({'name':process['name'], 'time':process['remaining_time']}) # for graph 
             time.sleep(self.Quantum)
             # burst time - quantum 
             process['remaining_time'] -= self.Quantum
             if process['remaining_time'] <= 0: #remove process from queue
-            #    free_memory= memory.deallocate(process['name'], process['memory_required']) # free memory
+               free_memory= memory.deallocate(process['name'], process['memory_required']) # free memory
                process['remaining_time']=0
-            #    print(f"process finished:{colored(process['name'],'red')}, Frame free: {colored(free_memory, 'red')}")
+               print(f"process finished:{colored(process['name'],'green')}, Frame free: {colored(free_memory, 'green')}")
                process['Completion_time'] = self.Completion_time
                self.complete_process.append(process)
                self.n_process.pop(0)
@@ -97,13 +95,12 @@ class round_robin(scheduler):
                 self.n_process= self.n_process[1:] + [process]
         
         for T in self.complete_process:  # formula for Time_Turnaround and waiting time 
-            # print(T['Completion_time'])
             T['Time_Turnaround'] = T['Completion_time'] - T['arrival_time'] #this is the time a when a process is completed when enter the queue formula Time_Turnaround = Completion_time - arrival_time
             T['waiting_time'] = T['Time_Turnaround'] - T['Burst_Time'] #This is the time a process spends waiting in the queue # formula Waitng_time = Time_Turnaround - Burst_Time
         
         # average time of the scheduler 
-        # Average_Wait_time=sum(self.T_process[x]['Waitng_time'] for x in self.T_process) / len(self.T_process)
-        # print(f"Average Waiting Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
+        Average_Wait_time=sum(x['waiting_time'] for x in self.complete_process) / len(self.complete_process)
+        print(f"Average Waiting Time: {colored('{:.2f}'.format(Average_Wait_time),'cyan')}")
 
         return self.complete_process
     
@@ -149,7 +146,8 @@ class Shortest_Job_First(scheduler):
         plt.show()
 
 # name, memory, burst time, arrival time 
-P=[process('ps1',1000000,5,1).__dict__,
+P=[process('ps1',1000000,5,0).__dict__,
+   process('ps1',1000000,5,1).__dict__,
    process('ps2',1000,4,2).__dict__,
    process('ps3',1000000,2,3).__dict__,
 #    process('ps4',1000000,6,4).__dict__,
