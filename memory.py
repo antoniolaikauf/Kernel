@@ -48,7 +48,7 @@ class Memory: #allocazione memoria
     def deallocate(self,process,memory):
         for x in self.page_table: 
             if x['NameP'] == process: x['NameP'] = None
-        return math.floor(memory / self.M_chunk) # tot frame liberati
+        return math.ceil(memory / self.M_chunk) # tot frame liberati
     
     def swapping(self, space_memory):
         '''

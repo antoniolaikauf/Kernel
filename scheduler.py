@@ -146,7 +146,7 @@ class Shortest_Job_First(scheduler):
         plt.show()
 
 # name, memory, burst time, arrival time 
-P=[process('ps1',1000000,5,0).__dict__,
+P=[process('ps0',1000000,5,0).__dict__,
    process('ps1',1000000,5,1).__dict__,
    process('ps2',1000,4,2).__dict__,
    process('ps3',1000000,2,3).__dict__,
@@ -172,7 +172,7 @@ elif rr:
     M=Memory() # memory
     M.PT()
     M.allocate(P)
-    # print(M.page_table)
+    print(M.page_table)
 
     RR= round_robin(Q, maxSize, Quantum=6)
     print(RR.run(M)) # algoritmo
